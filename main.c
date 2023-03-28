@@ -5,10 +5,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#define UDP_port 8000
+#include <string.h>
 
 int main(int argc, char* argv[])
 {
+    // Initialisation de l'appareil
     Appareil* a = initAppareil(argv, argc);
 
     if(a == NULL){
@@ -16,14 +17,19 @@ int main(int argc, char* argv[])
     }
 
     int nb_boucle = 0;
-    packet* p = createPacket("Message de début\0", a);   
-    Serveur* s = initServ(UDP_port);
-    setData(p, "Salut beau gosse\0");
-    if(argc > 1){
+    
+    // Initialisation du paquet
+    packet* p = createPacket("Message de début\0", a); 
+    // Initialisation du serveur  
+    Serveur* s = initServ(getUDPport(a));
+
+    // Envoi du premier message si on est le premier appareil de l'anneau
+    if(strcmp(getNom(a), "1") == 0 || strcmp(getNom(a), "local") == 0){
+        setData(p, "Salut beau gosse\0");
         sendData(p, a);
     }
 
-    while(nb_boucle < 10)
+    while(nb_boucle < 5)
     {
         receipt(s, p);
         printf("Nombre de boucle : %d\n", nb_boucle);
