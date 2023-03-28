@@ -1,7 +1,8 @@
 #include "../headers/Client.h"
+#include "../headers/Packet.h"
 
-#define PORT 8000
-#define IP "172.19.66.68"
+#define PORT 8001
+#define IP "172.19.70.26"
 
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -13,9 +14,9 @@
 #include <stdio.h>
 
 #define UDP_port_S 8002
-#define IP_addr_S "172.19.66.62"
+#define IP_addr_S "172.19.70.27"
 
-void client(char* buf)
+void client(packet* buf)
 {
     int sock_C; 
     struct sockaddr_in sa_S;
@@ -33,7 +34,7 @@ void client(char* buf)
 
 
     taille_sa_S = sizeof(struct sockaddr);
-    sendto(sock_C, buf, 128 * sizeof(char), 0,(struct sockaddr*) &sa_S, taille_sa_S);
+    sendto(sock_C, buf, sizeof(packet*), 0,(struct sockaddr*) &sa_S, taille_sa_S);
     perror("sendto\n");
 
     /*fin*/

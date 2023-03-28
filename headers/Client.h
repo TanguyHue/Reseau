@@ -6,5 +6,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include "../headers/Packet.h"
 
-void client(char* buf);
+void client(packet* buf);

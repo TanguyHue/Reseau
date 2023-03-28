@@ -1,15 +1,17 @@
 #include "headers/Client.h"
 #include "headers/Serveur.h"
+#include "headers/Packet.h"
 
-#define UDP_port_S 8000
-#define IP_addr_S "172.19.66.68"
+#define UDP_port_S 8001
+#define IP_addr_S "172.19.70.26"
 
 int main(int argc, char* argv[])
 {
     int nb_boucle = 0;
+    packet* p = tokenPacket();    
 
     int udp_socket;
-    char buf[128];
+    //char buf[128];
     struct sockaddr_in sa_Serv, sa_Client;
     unsigned int taille_sa;
 
@@ -25,19 +27,20 @@ int main(int argc, char* argv[])
     perror("Bind !\n");
 
     taille_sa = sizeof(struct sockaddr);
-    client("Salut0\0");
+
+    setData(p, "Coucou toi...");
+    client(p);
 
     while(1)
     {
-        recvfrom(udp_socket, buf, 128 * sizeof(char), 0, (struct sockaddr *) &sa_Client, &taille_sa);
+        recvfrom(udp_socket, p, sizeof(packet*), 0, (struct sockaddr *) &sa_Client, &taille_sa);
         perror("Recvfrom !\n");
 
         printf("Nombre de boucle : %d\n", nb_boucle);
         nb_boucle++;
-        printf("Message envoyé : %s\n", buf);
+        printf("Message envoyé : %s\n", getData(p));
         //buf[5] = nb_boucle + '0';
-        client(buf);
-        buf[0] = '\0';
+        client(p);
         sleep(1);
         /*sendto(udp_socket, "Coucou toi...", 128 * sizeof(char), 0, (struct sockaddr *) &sa_Client, taille_sa);
         perror("Sendto !\n");*/

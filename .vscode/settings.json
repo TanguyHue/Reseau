@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "inet.h": "c",
-        "string.h": "c"
-    }
+        "string.h": "c",
+        "packet.h": "c",
+        "serveur.h": "c"
+    },
+    "cmake.configureOnOpen": true,
+    "cmake.sourceDirectory": "${workspaceFolder}/home/tanguyhue/.var/app/com.visualstudio.code/data/vscode/extensions/twxs.cmake-0.0.17/node_modules/peg-cmake/test"
 }
