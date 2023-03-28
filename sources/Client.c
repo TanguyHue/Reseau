@@ -11,6 +11,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/*
+    * Fonction qui envoie un paquet à l'appareil suivant
+    * @param buf : paquet à envoyer
+    * @param a : appareil qui envoie le paquet
+*/
 void sendData(packet* buf, Appareil* a)
 {
     int sock_C; 
@@ -19,7 +24,7 @@ void sendData(packet* buf, Appareil* a)
 
     /* Création socket client */
     sock_C = socket(PF_INET, SOCK_DGRAM, 0); 
-    perror("socket\n");
+    //perror("socket\n");
 
     /* @IP et num port Serveur */
     bzero((char*) &sa_S, sizeof( struct sockaddr));
@@ -45,9 +50,9 @@ void sendData(packet* buf, Appareil* a)
 
     taille_sa_S = sizeof(struct sockaddr);
     sendto(sock_C, buf, sizeof(packet*), 0,(struct sockaddr*) &sa_S, taille_sa_S);
-    perror("sendto\n");
+    //perror("sendto\n");
 
     /*fin*/
     close(sock_C);
-    perror("close\n");
+    //perror("close\n");
 }

@@ -1,6 +1,5 @@
 #include "../headers/Appareil.h"
 #include <stdio.h>
-#include "../headers/Appareil.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -11,13 +10,13 @@ struct Appareil{
     int UDP_port;
 };
 
-Appareil* initAppareil(char* parametre[], int nb_parametre){
-    Appareil* a = (Appareil*)malloc(sizeof(Appareil));
-    
-    a->nom = (char*)malloc(sizeof(char) * 6);
-    a->IP = (char*)malloc(sizeof(char) * 16);
-    a->IP_suivant = (char*)malloc(sizeof(char) * 16);
-    
+/*
+    * Fonction qui initialise un appareil
+    * @param parametre[] : tableau de chaîne de caractère contenant l'emplacement de l'appareil dans l'anneau et le port UDP. Mettre l pour être en local
+    * @param nb_parametre : nombre d'éléments dans le tableau parametre[]
+    * @return Appareil* : pointeur sur l'appareil initialisé
+*/
+Appareil* initAppareil(char* parametre[], int nb_parametre){    
     if(nb_parametre < 2 || nb_parametre > 3){
         if(nb_parametre == 1){
             printf("Indiquer le numéro de l'appareil\n");
@@ -27,6 +26,12 @@ Appareil* initAppareil(char* parametre[], int nb_parametre){
         }
         return NULL;
     }
+
+    Appareil* a = (Appareil*)malloc(sizeof(Appareil));
+    
+    a->nom = (char*)malloc(sizeof(char) * 6);
+    a->IP = (char*)malloc(sizeof(char) * 16);
+    a->IP_suivant = (char*)malloc(sizeof(char) * 16);
 
     if(nb_parametre == 3){
         a->UDP_port = atoi(parametre[2]);
@@ -65,26 +70,50 @@ Appareil* initAppareil(char* parametre[], int nb_parametre){
     return a;
 }
 
+/*
+    * Fonction qui retourne le nom de l'appareil
+    * @param a : pointeur sur l'appareil
+    * @return char* : nom de l'appareil
+*/
 char *getNom(Appareil *a)
 {
     return a->nom;
 }
 
+/*
+    * Fonction qui retourne l'adresse IP de l'appareil
+    * @param a : pointeur sur l'appareil
+    * @return char* : adresse IP de l'appareil
+*/
 char *getIP(Appareil *a)
 {
     return a->IP;
 }
 
+/*
+    * Fonction qui retourne l'adresse IP de l'appareil suivant dans l'anneau
+    * @param a : pointeur sur l'appareil
+    * @return char* : adresse IP de l'appareil suivant
+*/
 char *getIPSuivant(Appareil *a)
 {
     return a->IP_suivant;
 }
 
+/*
+    * Fonction qui retourne le port UDP de l'appareil
+    * @param a : pointeur sur l'appareil
+    * @return int : port UDP de l'appareil
+*/
 int getUDPport(Appareil *a)
 {
     return a->UDP_port;
 }
 
+/*
+    * Fonction qui libère la mémoire allouée pour l'appareil
+    * @param a : pointeur sur l'appareil
+*/
 void deleteAppareil(Appareil *a)
 {
     free(a->nom);

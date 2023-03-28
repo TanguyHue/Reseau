@@ -1,3 +1,6 @@
+#ifndef _PACKET_H
+#define _PACKET_H
+
 #include "Appareil.h"
 
 typedef struct packet packet;
@@ -16,3 +19,5 @@ char* getAdressEmetteur(packet* p);
 int sum(char* data, int len);
 int checksum (packet* p);
 void deletePacket(packet* p);
+
+#endif

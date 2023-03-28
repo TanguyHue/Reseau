@@ -1,3 +1,6 @@
+#ifndef _APPAREIL_H
+#define _APPAREIL_H
+
 typedef struct Appareil Appareil;
 struct Appareil;
 
@@ -7,3 +10,5 @@ char* getIP(Appareil* a);
 char* getIPSuivant(Appareil* a);
 void deleteAppareil(Appareil* a);
 int getUDPport(Appareil *a);
+
+#endif
