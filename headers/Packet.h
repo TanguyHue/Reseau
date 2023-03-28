@@ -1,0 +1,14 @@
+typedef struct packet packet;
+struct packet;
+packet* createPacket(char* data, char* adress_emetteur, char* adress_dest);
+packet* tokenPacket();
+int isTokenPacket(packet* p);
+int getSize(packet* p);
+char* getData(packet* p);
+void setData(packet* p, char* data);
+void setAdressDest(packet* p, char* adress_dest);
+void setAdressEmetteur(packet* p, char* adress_emetteur);
+char* getAdressDest(packet* p);
+char* getAdressEmetteur(packet* p);
+int sum(char* data, int len);
+int checksum (packet* p);
