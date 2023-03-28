@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
     Serveur* s = initServ(UDP_port);
     setData(p, "Coucou toi...\0");
     if(argc > 1){
-        client(p, a);
+        sendData(p, a);
     }
 
     while(1)
@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
         printf("Nombre de boucle : %d\n", nb_boucle);
         nb_boucle++;
         printf("Message envoyé : %s\n", getData(p));
-        client(p, a);
+        sendData(p, a);
         sleep(1);
     }
 

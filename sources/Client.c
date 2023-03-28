@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void client(packet* buf, Appareil* a)
+void sendData(packet* buf, Appareil* a)
 {
     int sock_C; 
     struct sockaddr_in sa_S;

@@ -9,4 +9,4 @@
 #include "Packet.h"
 #include "Appareil.h"
 
-void client(packet* buf, Appareil* a);
+void sendData(packet* buf, Appareil* a);
