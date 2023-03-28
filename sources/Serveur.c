@@ -1,7 +1,10 @@
 #include "../headers/Serveur.h"
 
-void init(Serveur * s, int UDP_port_dest)
+Serveur* initServ(int UDP_port_dest)
 {
+    Serveur* s = (Serveur*)malloc(sizeof(Serveur));
+    s->udp_socket = 0;
+
     s->udp_socket = socket(PF_INET, SOCK_DGRAM, 0);
     perror("Création socket !\n");
 
@@ -13,10 +16,12 @@ void init(Serveur * s, int UDP_port_dest)
     perror("Bind !\n");
 
     s->taille_sa = sizeof(struct sockaddr);
+
+    return s;
 }
 
 void receipt(Serveur* s, packet* buf){
-    recvfrom(s->udp_socket, buf, sizeof(packet*), 0, (struct sockaddr *) &(s->sa_Client), &(s->taille_sa));
+    recvfrom(s->udp_socket, buf, sizeof(packet*), 0, (struct sockaddr *) &s->sa_Client, &s->taille_sa);
     perror("Recvfrom !\n");
 }
 

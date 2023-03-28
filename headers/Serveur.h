@@ -15,6 +15,6 @@ struct Serveur
     unsigned int taille_sa;
 };
 
-void init(Serveur* s,  int UDP_port_dest);
+Serveur* initServ(int UDP_port_dest);
 void receipt(Serveur* s, packet* buf);
 void stop(Serveur* s);

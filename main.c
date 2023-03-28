@@ -45,25 +45,7 @@ int main(int argc, char* argv[])
 
     int nb_boucle = 0;
     packet* p = createPacket("Salut ! \0", IP_dest, "*\0");   
-
-    int udp_socket;
-    //char buf[128];
-    struct sockaddr_in sa_Serv, sa_Client;
-    unsigned int taille_sa;
-
-    udp_socket = socket(PF_INET, SOCK_DGRAM, 0);
-    perror("Création socket !\n");
-
-    bzero((char*) &sa_Serv, sizeof(struct sockaddr));
-    sa_Serv.sin_family = PF_INET;
-    sa_Serv.sin_addr.s_addr = htonl(INADDR_ANY);
-    sa_Serv.sin_port = htons(UDP_port);
-
-    bind(udp_socket, (struct sockaddr *) &sa_Serv, sizeof(struct sockaddr));
-    perror("Bind !\n");
-
-    taille_sa = sizeof(struct sockaddr);
-
+    Serveur* s = initServ(UDP_port);
     setData(p, "Coucou toi...\0");
     if(argc > 1){
         client(p, IP_expe, IP_dest, UDP_port);
@@ -71,8 +53,7 @@ int main(int argc, char* argv[])
 
     while(1)
     {
-        recvfrom(udp_socket, p, sizeof(packet*), 0, (struct sockaddr *) &sa_Client, &taille_sa);
-        perror("Recvfrom !\n");
+        receipt(s, p);
         printf("Nombre de boucle : %d\n", nb_boucle);
         nb_boucle++;
         printf("Message envoyé : %s\n", getData(p));
@@ -80,7 +61,7 @@ int main(int argc, char* argv[])
         sleep(1);
     }
 
-    close(udp_socket);
+    close(s->udp_socket);
     perror("Close !\n");
 
     return 0;
