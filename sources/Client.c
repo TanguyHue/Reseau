@@ -32,6 +32,17 @@ void client(packet* buf)
     sa_S.sin_addr.s_addr = inet_addr(IP_addr_S);
     sa_S.sin_port = htons(UDP_port_S);
 
+    if(getAdressDest(buf) == IP)
+    {
+        if(checksum(buf) == EXIT_FAILURE){
+            printf("Erreur checksum\n");
+            return;
+        }
+        printf("Reçu\n");
+        setAdressDest(buf, IP_addr_S);
+        setAdressEmetteur(buf, IP);
+    }
+
 
     taille_sa_S = sizeof(struct sockaddr);
     sendto(sock_C, buf, sizeof(packet*), 0,(struct sockaddr*) &sa_S, taille_sa_S);

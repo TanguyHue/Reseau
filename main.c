@@ -8,7 +8,7 @@
 int main(int argc, char* argv[])
 {
     int nb_boucle = 0;
-    packet* p = tokenPacket();    
+    packet* p = createPacket("Salut ! \0", IP_addr_S, NULL);   
 
     int udp_socket;
     //char buf[128];
@@ -28,22 +28,20 @@ int main(int argc, char* argv[])
 
     taille_sa = sizeof(struct sockaddr);
 
-    setData(p, "Coucou toi...");
-    client(p);
+    setData(p, "Coucou toi...\n");
+    if(argc > 1){
+        client(p);
+    }
 
     while(1)
     {
         recvfrom(udp_socket, p, sizeof(packet*), 0, (struct sockaddr *) &sa_Client, &taille_sa);
         perror("Recvfrom !\n");
-
         printf("Nombre de boucle : %d\n", nb_boucle);
         nb_boucle++;
         printf("Message envoyé : %s\n", getData(p));
-        //buf[5] = nb_boucle + '0';
         client(p);
         sleep(1);
-        /*sendto(udp_socket, "Coucou toi...", 128 * sizeof(char), 0, (struct sockaddr *) &sa_Client, taille_sa);
-        perror("Sendto !\n");*/
     }
 
     close(udp_socket);
