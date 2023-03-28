@@ -55,7 +55,7 @@ char* getData(packet* p) {
 }
 
 void setData(packet* p, char* data) {
-    memcpy(p->data, data, p->size);
+    strcpy(p->data, data);
     p->size = strlen(data);
     p->checksum = sum(p->data, p->size);
 }

@@ -1,9 +1,6 @@
 #include "../headers/Client.h"
 #include "../headers/Packet.h"
 
-#define PORT 8001
-#define IP "172.19.70.26"
-
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <netinet/in.h>
@@ -13,10 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define UDP_port_S 8002
-#define IP_addr_S "172.19.70.27"
-
-void client(packet* buf)
+void client(packet* buf, char* IP_expe, char* IP_dest, int port_dest)
 {
     int sock_C; 
     struct sockaddr_in sa_S;
@@ -29,18 +23,18 @@ void client(packet* buf)
     /* @IP et num port Serveur */
     bzero((char*) &sa_S, sizeof( struct sockaddr));
     sa_S.sin_family = AF_INET;
-    sa_S.sin_addr.s_addr = inet_addr(IP_addr_S);
-    sa_S.sin_port = htons(UDP_port_S);
+    sa_S.sin_addr.s_addr = inet_addr(IP_dest);
+    sa_S.sin_port = htons(port_dest);
 
-    if(strcmp(getAdressDest(buf),IP) == 0)
+    if(strcmp(getAdressDest(buf),IP_expe) == 0)
     {
         if(checksum(buf) == EXIT_FAILURE){
             printf("Erreur checksum\n");
             return;
         }
         printf("Reçu\n");
-        setAdressDest(buf, IP_addr_S);
-        setAdressEmetteur(buf, IP);
+        setAdressDest(buf, IP_dest);
+        setAdressEmetteur(buf, IP_expe);
     }
     else{
         printf(getAdressDest(buf));
@@ -53,6 +47,6 @@ void client(packet* buf)
     perror("sendto\n");
 
     /*fin*/
-    close( sock_C);
+    close(sock_C);
     perror("close\n");
 }

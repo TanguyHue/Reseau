@@ -5,5 +5,16 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include "Packet.h"
 
-void receipt();
+typedef struct Serveur Serveur;
+struct Serveur
+{
+    int udp_socket;
+    struct sockaddr_in sa_Serv, sa_Client;
+    unsigned int taille_sa;
+};
+
+void init(Serveur* s,  int UDP_port_dest);
+void receipt(Serveur* s, packet* buf);
+void stop(Serveur* s);

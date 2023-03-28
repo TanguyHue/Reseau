@@ -1,50 +1,26 @@
 #include "../headers/Serveur.h"
 
-#define PORT 8001
+void init(Serveur * s, int UDP_port_dest)
+{
+    s->udp_socket = socket(PF_INET, SOCK_DGRAM, 0);
+    perror("Création socket !\n");
 
-void receipt(){
-    int sock_S;
-    char message[128];
-    struct sockaddr_in sa_S, sa_C;
-    unsigned int taille_sa_S;
+    bzero((char*) &(s->sa_Serv), sizeof(struct sockaddr));
+    s->sa_Serv.sin_family = PF_INET;
+    s->sa_Serv.sin_addr.s_addr = htonl(INADDR_ANY);
+    s->sa_Serv.sin_port = htons(UDP_port_dest);
+    bind(s->udp_socket, (struct sockaddr *) &(s->sa_Serv), sizeof(struct sockaddr));
+    perror("Bind !\n");
 
-    /* Création du socket */
-    sock_S = socket(PF_INET, SOCK_DGRAM, 0);
-    perror("socket");
+    s->taille_sa = sizeof(struct sockaddr);
+}
 
-    /* @IP et num port serveur */
-    bzero( (char*) &sa_S, sizeof(struct sockaddr_in) );
-    sa_S.sin_family = PF_INET;
-    sa_S.sin_port = htons(PORT);
-    sa_S.sin_addr.s_addr = htonl(INADDR_ANY);
+void receipt(Serveur* s, packet* buf){
+    recvfrom(s->udp_socket, buf, sizeof(packet*), 0, (struct sockaddr *) &(s->sa_Client), &(s->taille_sa));
+    perror("Recvfrom !\n");
+}
 
-    /* Attachement */
-    bind(sock_S, (struct sockaddr*) &sa_S, 
-        sizeof(struct sockaddr_in));
-    perror("bind");
-
-    /* Réception du message */
-    taille_sa_S = sizeof(struct sockaddr_in);
-
-    while (1)
-    {
-        /* Réception du message */
-        recvfrom(sock_S, message, 128 * sizeof(char), 0,
-                (struct sockaddr*) &sa_C, &taille_sa_S);
-        perror("recvfrom : ");
-
-        /* Service : afficahge */
-        printf("%s \n", message);
-
-        /* Re-emission datagramme vers client*/
-        sendto(sock_S, "Bonjour", 128 * sizeof(char), 0,
-                (struct sockaddr*) &sa_C, taille_sa_S);
-        perror("sendto : ");
-    }
-
-    /* Fin */
-    close(sock_S);
-    perror("close");
-    
-    exit(EXIT_SUCCESS);
+void stop(Serveur* s){
+    close(s->udp_socket);
+    perror("Close !\n");
 }
