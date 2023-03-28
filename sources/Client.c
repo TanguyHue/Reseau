@@ -1,5 +1,6 @@
 #include "../headers/Client.h"
 #include "../headers/Packet.h"
+#include "../headers/Appareil.h"
 
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -10,7 +11,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void client(packet* buf, char* IP_expe, char* IP_dest, int port_dest)
+void client(packet* buf, Appareil* a)
 {
     int sock_C; 
     struct sockaddr_in sa_S;
@@ -23,18 +24,18 @@ void client(packet* buf, char* IP_expe, char* IP_dest, int port_dest)
     /* @IP et num port Serveur */
     bzero((char*) &sa_S, sizeof( struct sockaddr));
     sa_S.sin_family = AF_INET;
-    sa_S.sin_addr.s_addr = inet_addr(IP_dest);
-    sa_S.sin_port = htons(port_dest);
+    sa_S.sin_addr.s_addr = inet_addr(getIPSuivant(a));
+    sa_S.sin_port = htons(getUDPport(a));
 
-    if(strcmp(getAdressDest(buf),IP_expe) == 0)
+    if(strcmp(getAdressDest(buf),getIP(a)) == 0)
     {
         if(checksum(buf) == EXIT_FAILURE){
             printf("Erreur checksum\n");
             return;
         }
         printf("Reçu\n");
-        setAdressDest(buf, IP_dest);
-        setAdressEmetteur(buf, IP_expe);
+        setAdressDest(buf, getIPSuivant(a));
+        setAdressEmetteur(buf, getIP(a));
     }
     else{
         printf(getAdressDest(buf));

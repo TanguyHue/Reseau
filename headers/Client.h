@@ -7,5 +7,6 @@
 #include <string.h>
 #include <stdio.h>
 #include "Packet.h"
+#include "Appareil.h"
 
-void client(packet* buf, char* IP_expe, char* IP_dest, int port_dest);
+void client(packet* buf, Appareil* a);

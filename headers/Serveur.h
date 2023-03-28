@@ -8,13 +8,10 @@
 #include "Packet.h"
 
 typedef struct Serveur Serveur;
-struct Serveur
-{
-    int udp_socket;
-    struct sockaddr_in sa_Serv, sa_Client;
-    unsigned int taille_sa;
-};
+struct Serveur;
 
 Serveur* initServ(int UDP_port_dest);
+void closeServ(Serveur* s);
+void deleteServ(Serveur* s);
 void receipt(Serveur* s, packet* buf);
 void stop(Serveur* s);

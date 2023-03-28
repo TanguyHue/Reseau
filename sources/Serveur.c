@@ -1,5 +1,13 @@
 #include "../headers/Serveur.h"
 
+struct Serveur
+{
+    int udp_socket;
+    struct sockaddr_in sa_Serv;
+    struct sockaddr_in sa_Client;
+    socklen_t taille_sa;
+};
+
 Serveur* initServ(int UDP_port_dest)
 {
     Serveur* s = (Serveur*)malloc(sizeof(Serveur));
@@ -25,7 +33,11 @@ void receipt(Serveur* s, packet* buf){
     perror("Recvfrom !\n");
 }
 
-void stop(Serveur* s){
+void closeServ(Serveur* s){
     close(s->udp_socket);
     perror("Close !\n");
+}
+
+void deleteServ(Serveur* s){
+    free(s);
 }

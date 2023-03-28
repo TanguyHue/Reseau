@@ -1,4 +1,5 @@
 #include "../headers/Packet.h"
+#include "../headers/Appareil.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,11 +14,11 @@ struct packet {
     int checksum;
 };
 
-packet* createPacket(char* data, char* adress_emetteur, char* adress_dest) {
+packet* createPacket(char* data, Appareil* a) {
     packet* p = (packet*) malloc(sizeof(packet));
     p->size = strlen(data);
-    strcpy(p->adress_emetteur, adress_emetteur);
-    strcpy(p->adress_destinataire, adress_dest);
+    strcpy(p->adress_emetteur, getIP(a));
+    strcpy(p->adress_destinataire, getIPSuivant(a));
     memcpy(p->data, data, p->size);
     p->checksum = sum(p->data, p->size);
     return p;
@@ -38,8 +39,8 @@ int checksum (packet* p) {
     return EXIT_FAILURE;
 }
 
-packet* tokenPacket() {
-    return createPacket("", "*", "*");
+packet* tokenPacket(Appareil* a) {
+    return createPacket("", a);
 }
 
 int isTokenPacket(packet* p) {
@@ -74,4 +75,8 @@ char* getAdressDest(packet* p){
 
 char* getAdressEmetteur(packet* p){
     return p->adress_emetteur;
+}
+
+void deletePacket(packet* p) {
+    free(p);
 }

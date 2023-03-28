@@ -1,7 +1,10 @@
+#include "Appareil.h"
+
 typedef struct packet packet;
 struct packet;
-packet* createPacket(char* data, char* adress_emetteur, char* adress_dest);
-packet* tokenPacket();
+
+packet* createPacket(char* data, Appareil* a);
+packet* tokenPacket(Appareil* a);
 int isTokenPacket(packet* p);
 int getSize(packet* p);
 char* getData(packet* p);
@@ -12,3 +15,4 @@ char* getAdressDest(packet* p);
 char* getAdressEmetteur(packet* p);
 int sum(char* data, int len);
 int checksum (packet* p);
+void deletePacket(packet* p);
