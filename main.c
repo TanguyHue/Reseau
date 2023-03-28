@@ -8,7 +8,7 @@
 int main(int argc, char* argv[])
 {
     int nb_boucle = 0;
-    packet* p = createPacket("Salut ! \0", IP_addr_S, NULL);   
+    packet* p = createPacket("Salut ! \0", IP_addr_S, "*\0");   
 
     int udp_socket;
     //char buf[128];
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 
     taille_sa = sizeof(struct sockaddr);
 
-    setData(p, "Coucou toi...\n");
+    setData(p, "Coucou toi...\0");
     if(argc > 1){
         client(p);
     }

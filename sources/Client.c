@@ -32,7 +32,7 @@ void client(packet* buf)
     sa_S.sin_addr.s_addr = inet_addr(IP_addr_S);
     sa_S.sin_port = htons(UDP_port_S);
 
-    if(getAdressDest(buf) == IP)
+    if(strcmp(getAdressDest(buf),IP) == 0)
     {
         if(checksum(buf) == EXIT_FAILURE){
             printf("Erreur checksum\n");
@@ -41,6 +41,10 @@ void client(packet* buf)
         printf("Reçu\n");
         setAdressDest(buf, IP_addr_S);
         setAdressEmetteur(buf, IP);
+    }
+    else{
+        printf(getAdressDest(buf));
+        printf("\n");
     }
 
 
