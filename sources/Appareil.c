@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define IP_1 "172.19.70.26\0"
+#define IP_2 "172.19.70.27\0"
+#define IP_3 "172.19.70.28\0"
 
 struct Appareil{
     char* nom;
@@ -48,20 +51,20 @@ Appareil* initAppareil(char* parametre[], int nb_parametre){
     }
     else if(strcmp(parametre[1], "1") == 0){
         strcpy(a->nom, "1\0");
-        strcpy(a->IP, "172.19.70.26\0");
-        strcpy(a->IP_suivant, "172.19.70.27\0");
+        strcpy(a->IP, IP_1);
+        strcpy(a->IP_suivant, IP_2);
         printf("Client 1 : %s\n", a->IP);
     }
     else if(strcmp(parametre[1], "2") == 0){
         strcpy(a->nom, "2\0");
-        strcpy(a->IP, "172.19.70.27\0");
-        strcpy(a->IP_suivant, "172.19.70.28\0");
+        strcpy(a->IP, IP_2);
+        strcpy(a->IP_suivant, IP_3);
         printf("Client 2 : %s\n", a->IP);
     }
     else if(strcmp(parametre[1], "3") == 0){
         strcpy(a->nom, "3\0");
-        strcpy(a->IP, "172.19.70.28\0");
-        strcpy(a->IP_suivant, "172.19.70.29\0");
+        strcpy(a->IP, IP_3);
+        strcpy(a->IP_suivant, IP_1);
         printf("Client 3 : %s\n", a->IP);
     }
     else{
