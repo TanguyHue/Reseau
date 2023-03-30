@@ -1,2 +1,5 @@
 # Ignorer le dossier .vscode
 .vscode/
+
+# Ignorer le main
+main
