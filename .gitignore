@@ -1,4 +1,4 @@
-# Ignorer le dossier .vscode
+# Ignorer le dossier IDE
 .vscode/
 
 # Ignorer le main
