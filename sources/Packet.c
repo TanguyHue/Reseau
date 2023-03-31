@@ -4,14 +4,6 @@
 #include <string.h>
 #define PACKET_SIZE 1024
 
-typedef struct packet packet;
-struct packet {
-    int size;
-    char adress_emetteur[16];
-    char adress_destinataire[16];
-    char data[PACKET_SIZE];
-    int checksum;
-};
 
 /*
     * Initialise un paquet
@@ -22,6 +14,9 @@ struct packet {
 packet* createPacket(char* data, Appareil* a) {
     packet* p = (packet*) malloc(sizeof(packet));
     p->size = strlen(data);
+    p->adress_emetteur = (char*) malloc(sizeof(char) * 16);
+    p->adress_destinataire = (char*) malloc(sizeof(char) * 16);
+    p->data = (char*) malloc(sizeof(char) * PACKET_SIZE);
     strcpy(p->adress_emetteur, getIP(a));
     strcpy(p->adress_destinataire, getIPSuivant(a));
     memcpy(p->data, data, p->size);
@@ -144,4 +139,22 @@ char* getAdressEmetteur(packet* p){
 */
 void deletePacket(packet* p) {
     free(p);
+}
+
+/*
+    * Vérifie si l'adresse de l'appareil correspond à l'adresse du destinataire du paquet
+    * @param a : appareil
+    * @param p : paquet
+    * @return int : 1 si l'adresse de l'appareil correspond à l'adresse du destinataire du paquet, 0 sinon
+*/
+int checkIP(Appareil* a, packet* p){
+    return(strcmp(getIP(a), getAdressDest(p)) == 0);
+}
+
+void copiePacket(packet* p1, packet* p2){
+    p1->size = p2->size;
+    strcpy(p1->adress_emetteur, p2->adress_emetteur);
+    strcpy(p1->adress_destinataire, p2->adress_destinataire);
+    memcpy(p1->data, p2->data, p1->size);
+    p1->checksum = p2->checksum;
 }

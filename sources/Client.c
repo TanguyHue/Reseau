@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define BUFFER_SIZE 256
+
 /*
     * Fonction qui envoie un paquet à l'appareil suivant
     * @param buf : paquet à envoyer
@@ -32,6 +34,8 @@ void sendData(packet* buf, Appareil* a)
     sa_S.sin_addr.s_addr = inet_addr(getIPSuivant(a));
     sa_S.sin_port = htons(getUDPport(a));
 
+
+    /*
     if(strcmp(getAdressDest(buf),getIP(a)) == 0)
     {
         if(checksum(buf) == EXIT_FAILURE){
@@ -43,13 +47,27 @@ void sendData(packet* buf, Appareil* a)
         setAdressEmetteur(buf, getIP(a));
     }
     else{
-        printf(getAdressDest(buf));
-        printf("\n");
-    }
+        //printf(getAdressDest(buf));
+        //printf("\n");
+    }*/
 
 
     taille_sa_S = sizeof(struct sockaddr);
-    sendto(sock_C, buf, sizeof(packet*), 0,(struct sockaddr*) &sa_S, taille_sa_S);
+    //printf("Message envoyé : %s\n", getIPSuivant(a));
+    //printf("Message envoyé : %s\n", getAdressDest(buf));
+
+    // Conversion de la structure en un tableau de caractères
+    char packet_buffer[BUFFER_SIZE];
+
+    int size_ip_emetteur = strlen(buf->adress_emetteur);
+    int size_ip_destinataire = strlen(buf->adress_destinataire);
+
+    sprintf(packet_buffer, "%d%s%d%s%d%s%d\n", htonl(size_ip_emetteur), buf->adress_emetteur, htonl(size_ip_destinataire), buf->adress_destinataire, htonl(buf->size), buf->data, htonl(buf->checksum));
+
+
+    printf("Message envoyé : %s\n", packet_buffer);
+
+    sendto(sock_C, packet_buffer, strlen(packet_buffer), 0,(struct sockaddr*) &sa_S, taille_sa_S);
     //perror("sendto\n");
 
     /*fin*/

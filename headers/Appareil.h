@@ -5,6 +5,7 @@ typedef struct Appareil Appareil;
 struct Appareil;
 
 Appareil* initAppareil(char* parametre[], int nb_parametre);
+Appareil *initAppareilParam(char* nom, char *ip, char *ip_suivante, int port);
 char* getNom(Appareil* a);
 char* getIP(Appareil* a);
 char* getIPSuivant(Appareil* a);
