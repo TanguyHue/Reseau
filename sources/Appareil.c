@@ -32,7 +32,7 @@ Appareil* initAppareil(char* parametre[], int nb_parametre){
 
     Appareil* a = (Appareil*)malloc(sizeof(Appareil));
     
-    a->nom = (char*)malloc(sizeof(char) * 6);
+    a->nom = (char*)malloc(sizeof(char) * 16);
     a->IP = (char*)malloc(sizeof(char) * 16);
     a->IP_suivant = (char*)malloc(sizeof(char) * 16);
 

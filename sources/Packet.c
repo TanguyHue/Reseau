@@ -56,7 +56,8 @@ int checksum (packet* p) {
     * @return packet* : paquet token initialisé
 */
 packet* tokenPacket(Appareil* a) {
-    return createPacket("", a);
+    Appareil* a2 = initAppareilParam("NULL", "1111111", "1111111", 111111);
+    return createPacket("", a2);
 }
 
 /*
@@ -149,12 +150,4 @@ void deletePacket(packet* p) {
 */
 int checkIP(Appareil* a, packet* p){
     return(strcmp(getIP(a), getAdressDest(p)) == 0);
-}
-
-void copiePacket(packet* p1, packet* p2){
-    p1->size = p2->size;
-    strcpy(p1->adress_emetteur, p2->adress_emetteur);
-    strcpy(p1->adress_destinataire, p2->adress_destinataire);
-    memcpy(p1->data, p2->data, p1->size);
-    p1->checksum = p2->checksum;
 }

@@ -7,9 +7,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
-#include <sys/wait.h>
-#include <signal.h>
-#include <sys/stat.h>
 
 #define IP_1 "127.0.0.1\0"
 #define IP_2 "127.0.0.2\0"
@@ -21,6 +18,7 @@ int main(int argc, char* argv[])
     Appareil* machine;
     Serveur* serveur;
 
+    int getToken = 0;
     
     int n = 0;
 
@@ -29,7 +27,7 @@ int main(int argc, char* argv[])
 		perror("fork");
 		return EXIT_FAILURE;
 	} else if (pid == 0) {
-        machine = initAppareilParam("2\0", IP_2, IP_3, 8002);
+        machine = initAppareilParam("machine 2\0", IP_2, IP_3, 8002);
         serveur = initServ(8001);
         n = 2;
 	} else {
@@ -39,7 +37,7 @@ int main(int argc, char* argv[])
             return EXIT_FAILURE;
         }
         else if(pid2 == 0) {
-            machine = initAppareilParam("3\0", IP_3, IP_4, 8003);
+            machine = initAppareilParam("machine 3\0", IP_3, IP_4, 8003);
             serveur = initServ(8002);
             n = 3;
         }
@@ -50,13 +48,13 @@ int main(int argc, char* argv[])
                 return EXIT_FAILURE;
             }
             else if(pid3 == 0){
-                machine = initAppareilParam("4\0", IP_4, IP_1, 8000);
+                machine = initAppareilParam("machine 4\0", IP_4, IP_1, 8000);
                 serveur = initServ(8003);
                 n = 4;
             }
 
             else{
-                machine = initAppareilParam("1\0", IP_1, IP_2, 8001);
+                machine = initAppareilParam("machine 1\0", IP_1, IP_2, 8001);
                 serveur = initServ(8000);
                 n = 1;
             }
@@ -66,10 +64,10 @@ int main(int argc, char* argv[])
     packet* p = createPacket("Salut", machine);
 
     if(n == 1){
-        printf("PPID : %d\n", getppid());
-        printf("PID : %d\n", getpid());
         sleep(2);
         printf("Je suis la machine 1\n");
+        //packet* token = tokenPacket(machine);
+        //sendData(token, machine);
         setAdressEmetteur(p, IP_1);
         setAdressDest(p, IP_3);
         sendData(p, machine);
@@ -79,10 +77,15 @@ int main(int argc, char* argv[])
 
     while(1){
         receipt(serveur, p);
-        sleep(3);
+        //sleep(1);
+        printf("\n\n");
         printf("Je suis la machine %s\n", getIP(machine));
+        //sleep(1);
         if(checkIP(machine, p)){
             printf("/!\\ Je suis le destinataire /!\\ \n");
+            if(checksum(p) == 0){
+                printf("Le message est incorrect !!!!!!!!!!!\n");
+            }
             switch (n)
             {
             case 1:
@@ -109,9 +112,11 @@ int main(int argc, char* argv[])
                 break;
             }
         }
+        //sleep(1);
         printf("Le message est à destination de : %s\n", getAdressDest(p));
         printf("Le message contient : %s\n", getData(p));
         sendData(p, machine);
+        //sleep(1);
         printf("Message envoyé à : %s\n", getIPSuivant(machine));
         printf("=====================================\n");
     }

@@ -26,6 +26,5 @@ int sum(char* data, int len);
 int checksum (packet* p);
 void deletePacket(packet* p);
 int checkIP(Appareil* a, packet* p);
-void copiePacket(packet* p1, packet* p2);
 
 #endif
