@@ -56,7 +56,7 @@ int checksum (packet* p) {
     * @return packet* : paquet token initialisé
 */
 packet* tokenPacket(Appareil* a) {
-    Appareil* a2 = initAppareilParam("NULL", "1111111", "1111111", 111111);
+    Appareil* a2 = initAppareilParam("NULL", "1111111", "1111111", 1111111);
     return createPacket("", a2);
 }
 
@@ -150,4 +150,14 @@ void deletePacket(packet* p) {
 */
 int checkIP(Appareil* a, packet* p){
     return(strcmp(getIP(a), getAdressDest(p)) == 0);
+}
+
+
+/*
+    * Vérifie si le packet est un token
+    * @param p : paquet
+    * @return int : 1 si le paquet est un token, 0 sinon
+*/
+int checkToken(packet* p){
+    return(strcmp(getAdressEmetteur(p), "1111111") == 0);
 }

@@ -13,6 +13,8 @@
 
 #define BUFFER_SIZE 256
 
+char* completeInt(int n);
+
 /*
     * Fonction qui envoie un paquet à l'appareil suivant
     * @param buf : paquet à envoyer
@@ -53,8 +55,8 @@ void sendData(packet* buf, Appareil* a)
 
 
     taille_sa_S = sizeof(struct sockaddr);
-    //printf("Message envoyé : %s\n", getIPSuivant(a));
-    //printf("Message envoyé : %s\n", getAdressDest(buf));
+    printf("Personne suivante : %s\n", getIPSuivant(a));
+    printf("Message envoyé à : %s\n", getAdressDest(buf));
 
     // Conversion de la structure en un tableau de caractères
     char packet_buffer[BUFFER_SIZE];
@@ -62,7 +64,7 @@ void sendData(packet* buf, Appareil* a)
     int size_ip_emetteur = strlen(buf->adress_emetteur);
     int size_ip_destinataire = strlen(buf->adress_destinataire);
 
-    sprintf(packet_buffer, "%d%s%d%s%d%s%d\n", htonl(size_ip_emetteur), buf->adress_emetteur, htonl(size_ip_destinataire), buf->adress_destinataire, htonl(buf->size), buf->data, htonl(buf->checksum));
+    sprintf(packet_buffer, "%s%s%s%s%s%s%s\n", completeInt(size_ip_emetteur), buf->adress_emetteur, completeInt(size_ip_destinataire), buf->adress_destinataire, completeInt(buf->size), buf->data, completeInt(buf->checksum));
 
 
     printf("Message envoyé : %s\n", packet_buffer);
@@ -73,4 +75,24 @@ void sendData(packet* buf, Appareil* a)
     /*fin*/
     close(sock_C);
     //perror("close\n");
+}
+
+/*
+    * Fonction qui remplit les octets d'un entier pour qu'il fasse 4 caractères
+    * @param n : entier à compléter
+    * @return char* : entier complété
+*/
+char* completeInt(int n)
+{
+    char* res = (char*)malloc(5*sizeof(char));
+    sprintf(res, "%d", n);
+    int size = strlen(res);
+    char* padded_res = (char*)malloc(5*sizeof(char));
+    for(int i = 0; i < 4-size; i++)
+    {
+        strcat(padded_res, "0");
+    }
+    strcat(padded_res, res);
+    free(res); // libérer la mémoire de la chaîne d'origine
+    return padded_res;
 }
