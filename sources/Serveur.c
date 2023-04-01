@@ -52,14 +52,14 @@ int receipt(Serveur* s, packet* buf){
     recvfrom(s->udp_socket, buffer, BUF_SIZE, 0, NULL, NULL);
     //printf("\n\nMessage reçu\nBuffer : %s\n", buffer);
 
-    printf("!==Paquet reçu==!\n");
+    //printf("!==Paquet reçu==!\n");
     char temp[5];
     strncpy(temp, buffer, 4);
     temp[5] = '\0';
     int taille_ip_emetteur = (atoi(temp));
     memset(buf->adress_emetteur, 0, strlen(buf->adress_emetteur));
     memcpy(buf->adress_emetteur, buffer+4, taille_ip_emetteur);
-    printf("IP emetteur : %s\n", buf->adress_emetteur);
+    //printf("IP emetteur : %s\n", buf->adress_emetteur);
 
     strncpy(temp, buffer+4+taille_ip_emetteur, 4);
     temp[5] = '\0';
@@ -68,7 +68,7 @@ int receipt(Serveur* s, packet* buf){
 
     memset(buf->adress_destinataire, 0, strlen(buf->adress_destinataire));
     memcpy(buf->adress_destinataire, buffer+4+taille_ip_emetteur+4, taille_ip_dest);
-    printf("IP destinataire : %s\n", buf->adress_destinataire);
+    //printf("IP destinataire : %s\n", buf->adress_destinataire);
     
     strncpy(temp, buffer+4+taille_ip_emetteur+4+taille_ip_dest, 4);
     temp[5] = '\0';
@@ -77,19 +77,19 @@ int receipt(Serveur* s, packet* buf){
 
     memset(buf->data, 0, strlen(buf->data));
     memcpy(buf->data, buffer+4+taille_ip_emetteur+4+taille_ip_dest+4, taille_data);
-    printf("Data : %s\n", buf->data);
+    //printf("Data : %s\n", buf->data);
     buf->size = 0;
     memcpy(&(buf->size), &taille_data, sizeof(int));
-    printf("Taille data : %d\n", buf->size);
+    //printf("Taille data : %d\n", buf->size);
 
     strncpy(temp, buffer+4+taille_ip_emetteur+4+taille_ip_dest+4+taille_data, 4);
     temp[5] = '\0';
 
     buf->checksum = 0;
     memcpy(&(buf->checksum), temp, 4);
-    printf("Checksum : %d\n", buf->checksum);
+    //printf("Checksum : %d\n", buf->checksum);
 
-    printf("!==Fin paquet==!\n");
+    //printf("!==Fin paquet==!\n");
 
     return EXIT_SUCCESS;
     //perror("Recvfrom !\n");

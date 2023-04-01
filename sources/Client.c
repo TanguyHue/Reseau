@@ -55,8 +55,8 @@ void sendData(packet* buf, Appareil* a)
 
 
     taille_sa_S = sizeof(struct sockaddr);
-    printf("Personne suivante : %s\n", getIPSuivant(a));
-    printf("Message envoyé à : %s\n", getAdressDest(buf));
+    //printf("Personne suivante : %s\n", getIPSuivant(a));
+    //printf("Message envoyé à : %s\n", getAdressDest(buf));
 
     // Conversion de la structure en un tableau de caractères
     char packet_buffer[BUFFER_SIZE];
@@ -67,7 +67,7 @@ void sendData(packet* buf, Appareil* a)
     sprintf(packet_buffer, "%s%s%s%s%s%s%s\n", completeInt(size_ip_emetteur), buf->adress_emetteur, completeInt(size_ip_destinataire), buf->adress_destinataire, completeInt(buf->size), buf->data, completeInt(buf->checksum));
 
 
-    printf("Message envoyé : %s\n", packet_buffer);
+    //printf("Message envoyé : %s\n", packet_buffer);
 
     sendto(sock_C, packet_buffer, strlen(packet_buffer), 0,(struct sockaddr*) &sa_S, taille_sa_S);
     //perror("sendto\n");

@@ -93,11 +93,13 @@ int main(int argc, char* argv[])
         }
     }
 
+    printf("Je suis la machine %s\n", getIP(machine));
+
     packet* p = createPacket("default", machine);
 
     if(strcmp(getIP(machine), IP_1) == 0){
         //sleep(2);
-        printf("Je suis la machine 1\n");
+        //printf("Je suis la machine 1\n");
         //packet* token = tokenPacket(machine);
         //sendData(token, machine);
     }
@@ -113,22 +115,19 @@ int main(int argc, char* argv[])
 
     while(1){
         receipt(serveur, p);
-        sleep(1);
+        //sleep(1);
         if(checkToken(p)){
-            kill(pid_fils, SIGUSR1);
             printf("Token détecté !\n");   
             printf("Message émis de : %s\n", getAdressEmetteur(p)); 
             sendData(p, machine);
-            kill(pid_fils, SIGUSR2);
         }
         else{
-            kill(pid_fils, SIGUSR1);
             //sleep(1);
             //printf("\n\n");
             //printf("Je suis la machine %s\n", getIP(machine));
             //sleep(1);
             if(checkIP(machine, p)){
-                printf("/!\\ Je suis le destinataire /!\\ \n");
+                printf("\n\n/!\\ Je suis le destinataire /!\\ \n");
                 if(checksum(p) == 0){
                     printf("Le message est incorrect !!!!!!!!!!!\n");
                 }
@@ -136,9 +135,12 @@ int main(int argc, char* argv[])
                     printf("Le message est correct !\n");
                     printf("Le message est : %s\n", getData(p));
                 }
+                fflush(stdout);
+                kill(pid_fils, SIGUSR2);
             }
             else{
                 sendData(p, machine);
+                //kill(pid_fils, SIGUSR2);
             }
             /*
             //sleep(1);
@@ -149,8 +151,8 @@ int main(int argc, char* argv[])
             printf("Message envoyé à : %s\n", getIPSuivant(machine));
             printf("=====================================\n");*/
             sleep(1);
-            kill(pid_fils, SIGUSR2);
         }
+        fflush(stdout);
     }
 
     closeServ(serveur);
@@ -193,40 +195,44 @@ void createProcess(){
         char temp[1048];
         memset(temp, 0, 1048);
         printf("> ");
-        scanf("%s", temp);
-
-        printf("Buffer : %s\n", temp);
+        fflush(stdout); // assure que le message de prompt est imprimé
+        fgets(temp, 1048, stdin); // lecture non bloquante
         
         write(fd[1], &temp, 1048);
         kill(getppid(), SIGUSR1);
+        while(1);
     } else {
         close(fd[1]);
     }
 }
 
 void quitte(){
-    printf("\nJe quitte !\n");
+    //printf("\nJe quitte !\n");
+    //pause();
 }
 
 void reprendre(){
-    printf("Je reprends !\n");
+    //printf("\nJe reprends !\n");
+    sleep(1);
     char temp[1048];
+    memset(temp, 0, 1048);
     printf("> ");
-    scanf("%s", temp);
+    fflush(stdout); // assure que le message de prompt est imprimé
+    fgets(temp, 1048, stdin); // lecture non bloquante
+    printf("\n");
     
     write(fd[1], &temp, 1048);
     kill(getppid(), SIGUSR1);
 }
 
 void message(){
-    kill(pid_fils, SIGUSR1);
-    sleep(1);
+    //sleep(1);
     int nbytes = read(fd[0], buffer, 1048);
     if (nbytes == -1) {
         perror("read");
         exit(EXIT_FAILURE);
     }
-    printf("Données reçues : %s\n", buffer);
+    //printf("Données reçues : %s\n", buffer);
 
     char message[1048];
     memcpy(message, buffer+1, 1047);
@@ -250,13 +256,15 @@ void message(){
 
         default:
             printf("Erreur de saisie !\n");
-            break;
+            kill(pid_fils, SIGUSR2);
+            return;
     }
 
     setAdressEmetteur(data, getIP(machine));
-    printf("Message à envoyer : %s\n", getData(data));
+    //printf("Message à envoyer : %s\n", getData(data));
     //printf("Message à envoyer à : %s\n", getAdressDest(data));
     //printf("Message envoyé par : %s\n", getAdressEmetteur(data));
     sendData(data, machine);
+    //sleep(1);
     kill(pid_fils, SIGUSR2);
 }
