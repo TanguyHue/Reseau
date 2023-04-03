@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE 700
 #include "headers/Client.h"
 #include "headers/Serveur.h"
 #include "headers/Packet.h"
