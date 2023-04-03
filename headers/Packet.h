@@ -13,7 +13,8 @@ struct packet {
 };
 
 packet* createPacket(char* data, Appareil* a);
-packet* tokenPacket(Appareil* a);
+packet* tokenPacket();
+packet* resetPacket(Appareil* a);
 int isTokenPacket(packet* p);
 int getSize(packet* p);
 char* getData(packet* p);
@@ -27,5 +28,6 @@ int checksum (packet* p);
 void deletePacket(packet* p);
 int checkIP(Appareil* a, packet* p);
 int checkToken(packet* p);
+int checkReset(packet* p, Appareil* a);
 
 #endif
