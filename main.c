@@ -1,3 +1,4 @@
+#define _XOPEN_SOURCE 700
 #include "headers/Client.h"
 #include "headers/Serveur.h"
 #include "headers/Packet.h"
@@ -6,44 +7,255 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/types.h>
+#include <signal.h>
+
+#define IP_1 "127.0.0.1\0"
+#define IP_2 "127.0.0.2\0"
+#define IP_3 "127.0.0.3\0"
+#define IP_4 "127.0.0.4\0"
+
+void createProcess();
+void message();
+int fd[2];
+char buffer[1048];
+pid_t pid_fils;
+Appareil* machine;
+packet* p;
+Serveur* serveur;
+int reset = 0;
+int nb_token = 0;
+int attente = 0;
 
 int main(int argc, char* argv[])
 {
-    // Initialisation de l'appareil
-    Appareil* a = initAppareil(argv, argc);
-
-    if(a == NULL){
-        return EXIT_FAILURE;
+    if(argc < 2){
+        printf("Il manque des arguments !\n");
+        return -1;    
+    }
+    else{
+        if(strcmp(argv[1], "1") == 0){
+            machine = initAppareilParam("machine 1\0", IP_1, IP_2, 8001);
+            serveur = initServ(8000);
+        }
+        else if(strcmp(argv[1], "2") == 0){
+            machine = initAppareilParam("machine 2\0", IP_2, IP_3, 8002);
+            serveur = initServ(8001);
+        }
+        else if(strcmp(argv[1], "3") == 0){
+            machine = initAppareilParam("machine 3\0", IP_3, IP_4, 8003);
+            serveur = initServ(8002);
+        }
+        else if(strcmp(argv[1], "4") == 0){
+            machine = initAppareilParam("machine 4\0", IP_4, IP_1, 8000);
+            serveur = initServ(8003);
+        }
     }
 
-    int nb_boucle = 0;
-    
-    // Initialisation du paquet
-    packet* p = createPacket("Message de début\0", a); 
-    // Initialisation du serveur  
-    Serveur* s = initServ(getUDPport(a));
+    printf("Je suis la machine %s\n", getIP(machine));
 
-    // Envoi du premier message si on est le premier appareil de l'anneau
-    if(strcmp(getNom(a), "1") == 0 || strcmp(getNom(a), "local") == 0){
-        setData(p, "Salut beau gosse\0");
-        sendData(p, a);
+    p = createPacket("default", machine);
+
+    struct sigaction si_statut;
+    sigaction(SIGUSR1, NULL, &si_statut);
+    si_statut.sa_handler = message;
+    si_statut.sa_flags = SA_RESTART;
+    sigaction(SIGUSR1, &si_statut, NULL);
+
+    createProcess();
+
+    while(1){
+        receipt(serveur, p);
+        usleep(20000);
+        //while (attente);
+        
+        if(checkToken(p)){
+            if(reset != 0){
+                nb_token = 0;
+                printf("Nb token : 0\n");
+                if(reset == 2){
+                    sendData(p, machine);
+                }
+                reset = 0;
+                printf("Reset : 0\n");
+            }
+            else{
+                nb_token = 1;
+                //printf("Nb token : 1\n");
+                usleep(20000);
+                //printf("Envoi du token\n");
+                sendData(p, machine);
+            }
+        }
+        else{
+            if(checkIP(machine, p)){
+                kill(pid_fils, SIGKILL);
+                printf("\n\n/!\\ Message reçu /!\\ \n");
+                if(checksum(p) == 0){
+                    printf("Le message est incorrect !!!!!!!!!!!\n");
+                }
+                else{
+                    printf("Message reçu de : %s\n", getAdressEmetteur(p));
+                    printf("Le message est : %s\n", getData(p));
+                }
+                createProcess();
+                packet* token = tokenPacket();
+                sendData(token, machine);
+                nb_token = 1;
+                //printf("Nb token : 1\n");
+                sleep(2);
+                deletePacket(token);
+            }
+            else{
+                if(checkReset(p, machine)){
+                    if(checkReset(p, machine) == 1){
+                        reset = 2;
+                        //printf("Reset : 2\n");
+                        nb_token = 0;
+                        //printf("Nb token : 0\n");
+                    }
+                    sendData(p, machine);
+                    usleep(20000);
+                }
+            }
+        }
+        //while (attente);
+        
     }
 
-    while(nb_boucle < 5)
-    {
-        receipt(s, p);
-        printf("Nombre de boucle : %d\n", nb_boucle);
-        nb_boucle++;
-        printf("Message envoyé : %s\n", getData(p));
-        sendData(p, a);
-        sleep(1);
-    }
-
-    closeServ(s);
+    closeServ(serveur);
 
     deletePacket(p);
-    deleteServ(s);
-    deleteAppareil(a);
+    deleteServ(serveur);
+    deleteAppareil(machine);
+    
 
     return EXIT_SUCCESS;
+}
+
+void createProcess(){
+
+    if(pipe(fd) == -1){
+        perror("pipe");
+        exit(EXIT_FAILURE);
+    }
+
+    pid_fils = fork();
+    if (pid_fils == -1) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    } else if (pid_fils == 0) {
+        close(fd[0]);
+
+        char temp[1048];
+        memset(temp, 0, 1048);
+        printf("\n> ");
+        scanf("%[^\n]", temp);
+        
+        write(fd[1], &temp, 1048);
+        kill(getppid(), SIGUSR1);
+    } else {
+        close(fd[1]);
+    }
+}
+
+void message(){
+    int nbytes = read(fd[0], buffer, 1048);
+    if (nbytes == -1) {
+        perror("read");
+        exit(EXIT_FAILURE);
+    }
+
+    char message[1048];
+    memcpy(message, buffer+1, 1047);
+    message[strlen(buffer)] = '\0';
+
+    packet* data = createPacket(message, machine);
+    int n = 1;
+
+    switch(buffer[0]){
+        case '1':
+            setAdressDest(data, IP_1);
+            break;
+        case '2':
+            setAdressDest(data, IP_2);
+            break;
+        case '3':
+            setAdressDest(data, IP_3);
+            break;
+        case '4':
+            setAdressDest(data, IP_4);
+            break;
+
+        case 't':
+            if(nb_token){
+                printf("\nIl y a déjà un token\n");
+            }
+            else{
+                packet* token = tokenPacket();
+                sendData(token, machine);
+                printf("\nToken envoyé !\n");
+                nb_token = 1;
+                printf("Nb token : 1\n");
+                reset = 0;
+                //printf("Reset : 0\n");
+                deletePacket(token);
+            }
+            //usleep(2000);
+            n = 0;
+            break;
+        
+        case 'r':
+            attente = 1;
+            if(reset == 0 && nb_token){
+                reset = 1;
+                //printf("Reset : 1\n");
+                printf("\nSuppresion du token\n");
+                packet* pReset = resetPacket(machine);
+                sendData(pReset, machine);
+                deletePacket(pReset);
+            }
+            else{
+                printf("\nIl n'y a pas de token ou il y a déjà une demande de reset\n");
+            }
+            usleep(2000);
+            attente = 0;
+            n = 0;
+            break;
+
+        default:
+            printf("Erreur de saisie ! Mettez le numéro de l'appareil en premier caractère puis le message\n");
+            kill(pid_fils, SIGKILL);
+            createProcess();
+            return;
+    } 
+
+    if(n) { printf("\nMessage : %s\n", message); }
+    setAdressEmetteur(data, getIP(machine));
+    if(nb_token == 0 && n) { printf("Attention, il n'y a pas de token de boucle\n"); }
+    if(n) { nb_token = -1; }
+    
+    // Changer, mettre plutot une valeur à une variable et cest le while principal qui va envoyer le message
+    if(n){
+        printf("En attente de token...\n");
+        receipt(serveur, p);
+        printf("Token reçu !\n");
+        sendData(data, machine);
+        nb_token = 0;
+        //printf("Nb token : 0\n");
+        n = 0;
+    }
+    kill(pid_fils, SIGKILL);
+
+    usleep(200);
+    if(nb_token){
+        packet* token = tokenPacket();
+        sendData(token, machine);
+        //printf("Reset : 0\n");
+        deletePacket(token);
+    }
+
+    deletePacket(data);
+    //usleep(200);
+    createProcess();
 }

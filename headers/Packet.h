@@ -4,10 +4,17 @@
 #include "Appareil.h"
 
 typedef struct packet packet;
-struct packet;
+struct packet {
+    char* adress_emetteur;
+    char* adress_destinataire;
+    char* data;
+    int size;
+    int checksum;
+};
 
 packet* createPacket(char* data, Appareil* a);
-packet* tokenPacket(Appareil* a);
+packet* tokenPacket();
+packet* resetPacket(Appareil* a);
 int isTokenPacket(packet* p);
 int getSize(packet* p);
 char* getData(packet* p);
@@ -19,5 +26,8 @@ char* getAdressEmetteur(packet* p);
 int sum(char* data, int len);
 int checksum (packet* p);
 void deletePacket(packet* p);
+int checkIP(Appareil* a, packet* p);
+int checkToken(packet* p);
+int checkReset(packet* p, Appareil* a);
 
 #endif

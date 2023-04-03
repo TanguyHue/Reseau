@@ -32,7 +32,7 @@ Appareil* initAppareil(char* parametre[], int nb_parametre){
 
     Appareil* a = (Appareil*)malloc(sizeof(Appareil));
     
-    a->nom = (char*)malloc(sizeof(char) * 6);
+    a->nom = (char*)malloc(sizeof(char) * 16);
     a->IP = (char*)malloc(sizeof(char) * 16);
     a->IP_suivant = (char*)malloc(sizeof(char) * 16);
 
@@ -74,10 +74,31 @@ Appareil* initAppareil(char* parametre[], int nb_parametre){
 }
 
 /*
-    * Fonction qui retourne le nom de l'appareil
-    * @param a : pointeur sur l'appareil
-    * @return char* : nom de l'appareil
+    * Fonction qui initialise un appareil
+    * @param nom : nom de l'appareil
+    * @param ip : adresse IP de l'appareil
+    * @param ip_suivante : adresse IP de l'appareil suivant dans l'anneau
+    * @return Appareil* : pointeur sur l'appareil initialisé
 */
+Appareil *initAppareilParam(char* nom, char *ip, char *ip_suivante, int port)
+{
+    Appareil* a = (Appareil*)malloc(sizeof(Appareil));
+
+    a->nom = (char*)malloc(sizeof(char) * 6);
+    a->IP = (char*)malloc(sizeof(char) * 16);
+    a->IP_suivant = (char*)malloc(sizeof(char) * 16);
+    a->UDP_port = port;
+
+    strcpy(a->nom, nom);
+    strcpy(a->IP, ip);
+    strcpy(a->IP_suivant, ip_suivante);
+    return a;
+}
+/*
+ * Fonction qui retourne le nom de l'appareil
+ * @param a : pointeur sur l'appareil
+ * @return char* : nom de l'appareil
+ */
 char *getNom(Appareil *a)
 {
     return a->nom;

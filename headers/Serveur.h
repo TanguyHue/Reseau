@@ -9,6 +9,6 @@ struct Serveur;
 Serveur* initServ(int UDP_port_dest);
 void closeServ(Serveur* s);
 void deleteServ(Serveur* s);
-void receipt(Serveur* s, packet* buf);
+int receipt(Serveur* s, packet* buf);
 
 #endif
