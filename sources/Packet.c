@@ -52,11 +52,15 @@ int checksum (packet* p) {
 
 /*
     * Initialise un paquet token
-    * @param a : appareil qui envoie le paquet
     * @return packet* : paquet token initialisé
 */
-packet* tokenPacket(Appareil* a) {
-    Appareil* a2 = initAppareilParam("NULL", "1111111", "1111111", 1111111);
+packet* tokenPacket() {
+    Appareil* a = initAppareilParam("NULL", "1111111", "1111111", 1111111);
+    return createPacket("", a);
+}
+
+packet* resetPacket(Appareil* a){
+    Appareil* a2 = initAppareilParam("NULL", getIP(a), "000000", 1111111);
     return createPacket("", a2);
 }
 
@@ -160,4 +164,20 @@ int checkIP(Appareil* a, packet* p){
 */
 int checkToken(packet* p){
     return(strcmp(getAdressEmetteur(p), "1111111") == 0);
+}
+
+/*
+    * Gère les tokens de réinitialisation
+    * @param p : paquet
+    * @param a : Appareil qui reçoit
+    * @return int : 0 si le paquet à fait un tour, 1 si ce paquet est un paquet de reset, 2 sinon
+*/
+int checkReset(packet* p, Appareil* a){
+    if(strcmp(getAdressDest(p), "000000") == 0 && strcmp(getAdressEmetteur(p), getIP(a)) == 0){
+        return 0;
+    } else if(strcmp(getAdressDest(p), "000000") == 0 && strcmp(getAdressEmetteur(p), getIP(a)) != 0){
+        return 1;
+    } else {
+        return 2;
+    }
 }
