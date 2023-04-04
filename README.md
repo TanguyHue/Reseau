@@ -28,6 +28,22 @@ Pour lancer le programme, il faut lancer la commande suivante :
 ./main [appareil] [port(optionel)]
 ```
 
+### Local
+
+Une fois le programme compiler, voici les étapes à suivre pour utiliser le programme :
+* L'utilisateur choisit l'appareil qu'il souhaite utiliser, en utilisant la commande `./main [appareil]`
+* Sur l'un des appareils, on envoie un token sur le réseau, en envoyant le message `t`
+* Vous pouvez envoyez des messages sur le réseau, en envoyant le message `[appareilDestinataire][message]`
+
+Liste des appareils possibles :
+* `1` Appareil 1 : @IP = 127.0.0.1 [port:8000]
+* `2` Appareil 2 : @IP = 127.0.0.2 [port:8001]
+* `3` Appareil 3 : @IP = 127.0.0.3 [port:8002]
+* `4` Appareil 4 : @IP = 127.0.0.4 [port:8003]
+
+
+### Réseau externe
+
 Liste des appareils possibles :
 * `1` Appareil 1 : @IP = 172.19.70.26
 * `2` Appareil 2 : @IP = 172.19.70.27
@@ -35,15 +51,8 @@ Liste des appareils possibles :
 * `l` localhost : @IP = 127.0.0.1
 
 On peut changer les adresses IP dans le fichier **Appareil.c**, en changeant les valeurs de la constante **IP_1**, **IP_2** et **IP_3**.
+Le port est optionnel, il est par défaut à 8000.  
 
-Le port est optionnel, il est par défaut à 8000.
-
-Une fois le programme compiler, voici les étapes à suivre pour utiliser le programme :
-* L'utilisateur choisit l'appareil qu'il souhaite utiliser, en utilisant la commande `./main [appareil]`
-* Sur l'un des appareils, on envoie un token sur le réseau, en envoyant le message `t`
-* Vous pouvez envoyez des messages sur le réseau, en envoyant le message `[appareilDestinataire][message]`
-
-Si une machine veut envoyer un message, elle doit attendre de recevoir un token qu'elle va effacer, et lorsqu'une machine reçoit un message, elle réémet le token.
 
 ## Organisation du projet
 
