@@ -36,10 +36,12 @@ Une fois le programme compiler, voici les étapes à suivre pour utiliser le pro
 * Vous pouvez envoyez des messages sur le réseau, en envoyant le message `[appareilDestinataire][message]`
 
 Liste des appareils possibles :
-* `1` Appareil 1 : @IP = 127.0.0.1 [port:8000]
-* `2` Appareil 2 : @IP = 127.0.0.2 [port:8001]
-* `3` Appareil 3 : @IP = 127.0.0.3 [port:8002]
-* `4` Appareil 4 : @IP = 127.0.0.4 [port:8003]
+* `1` Appareil 1 : @IP_1 = 127.0.0.1 [port:8000]
+* `2` Appareil 2 : @IP_2 = 127.0.0.2 [port:8001]
+* `3` Appareil 3 : @IP_3 = 127.0.0.3 [port:8002]
+* `4` Appareil 4 : @IP_4 = 127.0.0.4 [port:8003]
+
+On peut changer les adresses IP dans le fichier **main.c**, en changeant les valeurs de la constante **IP_1**, **IP_2**, **IP_3** et **IP_4**.  
 
 
 ### Réseau externe
