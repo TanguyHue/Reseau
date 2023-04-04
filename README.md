@@ -1,4 +1,4 @@
-# Projet Réseau
+# Projet Réseau 📶
 
 L'objectif de ce TP est de mettre en place un réseau local en C entre plusieurs machines. 
 
