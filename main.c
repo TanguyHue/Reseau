@@ -9,11 +9,17 @@
 #include <string.h>
 #include <sys/types.h>
 #include <signal.h>
+#include <string.h>
 
-#define IP_1 "127.0.0.1\0"
-#define IP_2 "127.0.0.2\0"
-#define IP_3 "127.0.0.3\0"
-#define IP_4 "127.0.0.4\0"
+// 172.19.65.111 <- 1
+// 172.19.65.112 <- 2
+// 172.19.65.114 <- 3
+// 172.19.65.115 <- 4
+
+char IP_1[128] = "127.0.0.1\0";
+char IP_2[128] = "127.0.0.2\0";
+char IP_3[128] = "127.0.0.3\0";
+char IP_4[128] = "127.0.0.4\0";
 
 void createProcess();
 void message();
@@ -26,6 +32,27 @@ Serveur* serveur;
 int reset = 0;
 int nb_token = 0;
 int attente = 0;
+
+void lire_IP() 
+{
+    printf("Entrez votre @IP : ");
+    scanf("%s", IP_1);
+    strncat(IP_1, "\0", 1);
+
+    printf("Entrez l'@IP du suivant : ");
+    scanf("%s", IP_2);
+    strncat(IP_2, "\0", 1);
+
+    printf("Entrez @IP 3 : ");
+    scanf("%s", IP_3);
+    strncat(IP_3, "\0", 1);
+
+    printf("Entrez @IP 4 : ");
+    scanf("%s", IP_4);
+    strncat(IP_4, "\0", 1);
+
+    getchar();
+}
 
 int main(int argc, char* argv[])
 {
@@ -50,6 +77,23 @@ int main(int argc, char* argv[])
             machine = initAppareilParam("machine 4\0", IP_4, IP_1, 8000);
             serveur = initServ(8003);
         }
+        else {
+            printf("Erreur : Argument IP invalide");
+            return 1;
+        }
+        
+        // Boucle locale
+        if(strcmp(argv[2], "-l") == 0) {
+
+        }
+        // Boucle réseau
+        else if(strcmp(argv[2], "-r") == 0) {
+            lire_IP();
+        }
+        else {
+            printf("Erreur : trop d'arguments !\n");
+            return 1;
+        }
     }
 
     printf("Je suis la machine %s\n", getIP(machine));
@@ -67,7 +111,6 @@ int main(int argc, char* argv[])
     while(1){
         receipt(serveur, p);
         usleep(20000);
-        //while (attente);
         
         if(checkToken(p)){
             if(reset != 0){
@@ -119,7 +162,6 @@ int main(int argc, char* argv[])
                 }
             }
         }
-        //while (attente);
         
     }
 
@@ -224,6 +266,8 @@ void message(){
             break;
 
         default:
+            printf("Message pipe : %s\n", buffer);
+            sleep(5);
             printf("Erreur de saisie ! Mettez le numéro de l'appareil en premier caractère puis le message\n");
             kill(pid_fils, SIGKILL);
             createProcess();
