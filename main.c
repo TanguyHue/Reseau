@@ -55,7 +55,20 @@ void lire_IP()
 }
 
 int main(int argc, char* argv[])
-{
+{        
+    // Boucle locale
+    if(strcmp(argv[2], "-l") == 0) {
+
+    }
+    // Boucle réseau
+    else if(strcmp(argv[2], "-r") == 0) {
+        lire_IP();
+    }
+    else {
+        printf("Erreur : trop d'arguments !\n");
+        return 1;
+    }
+
     if(argc < 2){
         printf("Il manque des arguments !\n");
         return -1;    
@@ -101,19 +114,6 @@ int main(int argc, char* argv[])
         }
         else {
             printf("Erreur : Argument IP invalide");
-            return 1;
-        }
-        
-        // Boucle locale
-        if(strcmp(argv[2], "-l") == 0) {
-
-        }
-        // Boucle réseau
-        else if(strcmp(argv[2], "-r") == 0) {
-            lire_IP();
-        }
-        else {
-            printf("Erreur : trop d'arguments !\n");
             return 1;
         }
     }
