@@ -55,12 +55,12 @@ int checksum (packet* p) {
     * @return packet* : paquet token initialisé
 */
 packet* tokenPacket() {
-    Appareil* a = initAppareilParam("NULL", "1111111", "1111111", 1111111);
+    Appareil* a = initAppareil("NULL", "1111111", "1111111", 1111111);
     return createPacket("", a);
 }
 
 packet* resetPacket(Appareil* a){
-    Appareil* a2 = initAppareilParam("NULL", getIP(a), "000000", 1111111);
+    Appareil* a2 = initAppareil("NULL", getIP(a), "000000", 1111111);
     return createPacket("", a2);
 }
 

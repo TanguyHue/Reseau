@@ -26,11 +26,11 @@ void sendData(packet* buf, Appareil* a)
     struct sockaddr_in sa_S;
     unsigned int taille_sa_S;
 
-    /* Création socket client */
+    // Création socket client 
     sock_C = socket(PF_INET, SOCK_DGRAM, 0); 
 
 
-    /* @IP et num port Serveur */
+    // IP et num port Serveur 
     bzero((char*) &sa_S, sizeof( struct sockaddr));
     sa_S.sin_family = AF_INET;
     sa_S.sin_addr.s_addr = inet_addr(getIPSuivant(a));
@@ -44,12 +44,21 @@ void sendData(packet* buf, Appareil* a)
     int size_ip_emetteur = strlen(buf->adress_emetteur);
     int size_ip_destinataire = strlen(buf->adress_destinataire);
 
+    /*
+        Structure de la trame
+        - Nombre de caractère de l'@ IP de l'émetteur
+        - @ IP de l'émetteur
+        - Nombre de caractère de l'@ IP du destinataire
+        - @ IP du destinataire
+        - Nombre de caractère des données
+        - Données
+        - CheckSum
+    */
     sprintf(packet_buffer, "%s%s%s%s%s%s%s\n", completeInt(size_ip_emetteur), buf->adress_emetteur, completeInt(size_ip_destinataire), buf->adress_destinataire, completeInt(buf->size), buf->data, completeInt(buf->checksum));
 
 
     sendto(sock_C, packet_buffer, strlen(packet_buffer), 0,(struct sockaddr*) &sa_S, taille_sa_S);
 
-    /*fin*/
     close(sock_C);
 }
 
