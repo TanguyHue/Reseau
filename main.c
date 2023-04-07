@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
         printf("Il manque des arguments !\n");
         return -1;    
     }
-    else{
+    else if (argc == 2){
         if(strcmp(argv[1], "1") == 0){
             machine = initAppareilParam("machine 1\0", IP_1, IP_2, 8001);
             serveur = initServ(8000);
@@ -75,6 +75,28 @@ int main(int argc, char* argv[])
         }
         else if(strcmp(argv[1], "4") == 0){
             machine = initAppareilParam("machine 4\0", IP_4, IP_1, 8000);
+            serveur = initServ(8003);
+        }
+        else {
+            printf("Erreur : Argument IP invalide");
+            return 1;
+        }
+    }
+    else {
+        if(strcmp(argv[1], "1") == 0){
+            machine = initAppareilParam("machine 1\0", IP_1, IP_2, 8001);
+            serveur = initServ(8004);
+        }
+        else if(strcmp(argv[1], "2") == 0){
+            machine = initAppareilParam("machine 2\0", IP_1, IP_2, 8002);
+            serveur = initServ(8001);
+        }
+        else if(strcmp(argv[1], "3") == 0){
+            machine = initAppareilParam("machine 3\0", IP_1, IP_2, 8003);
+            serveur = initServ(8002);
+        }
+        else if(strcmp(argv[1], "4") == 0){
+            machine = initAppareilParam("machine 4\0", IP_1, IP_2, 8004);
             serveur = initServ(8003);
         }
         else {
