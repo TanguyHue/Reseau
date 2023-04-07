@@ -7,8 +7,8 @@
 
 /*
     * Initialise un paquet
-    * @param data : données à envoyer
-    * @param a : appareil qui envoie le paquet
+    * @param data données à envoyer
+    * @param a appareil qui envoie le paquet
     * @return packet* : paquet initialisé
 */
 packet* createPacket(char* data, Appareil* a) {
@@ -26,9 +26,9 @@ packet* createPacket(char* data, Appareil* a) {
 
 /*
     * Calcul le checksum d'un paquet
-    * @param p : données du paquet
-    * @param len : taille des données
-    * @return int : checksum du paquet
+    * @param p données du paquet
+    * @param len taille des données
+    * @return : int checksum du paquet
 */
 int sum(char* data, int len) {
     int sum = 0;
@@ -40,7 +40,7 @@ int sum(char* data, int len) {
 
 /*
     * Fais un test de checksum
-    * @param p : paquet
+    * @param p paquet
     * @return int : 1 si le checksum est bon, 0 sinon
 */
 int checksum (packet* p) {
@@ -66,7 +66,7 @@ packet* resetPacket(Appareil* a){
 
 /*
     * Vérifie si un paquet est un paquet token
-    * @param p : paquet
+    * @param p paquet
     * @return int : 1 si le paquet est un paquet token, 0 sinon
 */
 int isTokenPacket(packet* p) {
@@ -75,7 +75,7 @@ int isTokenPacket(packet* p) {
 
 /*
     * Récupère la taille d'un paquet
-    * @param p : paquet
+    * @param p paquet
     * @return int : taille du paquet
 */
 int getSize(packet* p) {
@@ -84,7 +84,7 @@ int getSize(packet* p) {
 
 /*
     * Récupère les données d'un paquet
-    * @param p : paquet
+    * @param p paquet
     * @return char* : données du paquet
 */
 char* getData(packet* p) {
@@ -93,8 +93,8 @@ char* getData(packet* p) {
 
 /*
     * Modifie les données d'un paquet
-    * @param p : paquet
-    * @param data : données à envoyer
+    * @param p paquet
+    * @param data données à envoyer
 */
 void setData(packet* p, char* data) {
     strcpy(p->data, data);
@@ -104,8 +104,8 @@ void setData(packet* p, char* data) {
 
 /*
     * Modifie l'adresse du destinataire d'un paquet
-    * @param p : paquet
-    * @param adress_dest : adresse du destinataire
+    * @param p paquet
+    * @param adress_dest adresse du destinataire
 */
 void setAdressDest(packet* p, char* adress_dest){
     strcpy(p->adress_destinataire, adress_dest);
@@ -113,8 +113,8 @@ void setAdressDest(packet* p, char* adress_dest){
 
 /*
     * Modifie l'adresse de l'émetteur d'un paquet
-    * @param p : paquet
-    * @param adress_emetteur : adresse de l'émetteur
+    * @param p paquet
+    * @param adress_emetteur adresse de l'émetteur
 */
 void setAdressEmetteur(packet* p, char* adress_emetteur){
     strcpy(p->adress_emetteur, adress_emetteur);
@@ -122,7 +122,7 @@ void setAdressEmetteur(packet* p, char* adress_emetteur){
 
 /*
     * Récupère l'adresse du destinataire d'un paquet
-    * @param p : paquet
+    * @param p paquet
     * @return char* : adresse du destinataire
 */
 char* getAdressDest(packet* p){
@@ -131,7 +131,7 @@ char* getAdressDest(packet* p){
 
 /*
     * Récupère l'adresse de l'émetteur d'un paquet
-    * @param p : paquet
+    * @param p paquet
     * @return char* : adresse de l'émetteur
 */
 char* getAdressEmetteur(packet* p){
@@ -140,7 +140,7 @@ char* getAdressEmetteur(packet* p){
 
 /*
     * Libère la mémoire allouée pour un paquet
-    * @param p : paquet à libérer
+    * @param p paquet à libérer
 */
 void deletePacket(packet* p) {
     free(p);
@@ -148,8 +148,8 @@ void deletePacket(packet* p) {
 
 /*
     * Vérifie si l'adresse de l'appareil correspond à l'adresse du destinataire du paquet
-    * @param a : appareil
-    * @param p : paquet
+    * @param a appareil
+    * @param paquet
     * @return int : 1 si l'adresse de l'appareil correspond à l'adresse du destinataire du paquet, 0 sinon
 */
 int checkIP(Appareil* a, packet* p){
@@ -159,7 +159,7 @@ int checkIP(Appareil* a, packet* p){
 
 /*
     * Vérifie si le packet est un token
-    * @param p : paquet
+    * @param p paquet
     * @return int : 1 si le paquet est un token, 0 sinon
 */
 int checkToken(packet* p){
@@ -168,8 +168,8 @@ int checkToken(packet* p){
 
 /*
     * Gère les tokens de réinitialisation
-    * @param p : paquet
-    * @param a : Appareil qui reçoit
+    * @param p paquet
+    * @param a Appareil qui reçoit
     * @return int : 0 si le paquet à fait un tour, 1 si ce paquet est un paquet de reset, 2 sinon
 */
 int checkReset(packet* p, Appareil* a){
