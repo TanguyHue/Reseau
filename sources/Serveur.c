@@ -19,7 +19,7 @@ struct Serveur
 
 /*
     * Initialisation du serveur
-    * @param UDP_port_dest : port d'écoute du serveur
+    * @param UDP_port_dest port d'écoute du serveur
     * @return Serveur* : pointeur sur le serveur
 */
 Serveur* initServ(int UDP_port_dest)
@@ -28,14 +28,12 @@ Serveur* initServ(int UDP_port_dest)
     s->udp_socket = 0;
 
     s->udp_socket = socket(PF_INET, SOCK_DGRAM, 0);
-    //perror("Création socket !\n");
 
     bzero((char*) &(s->sa_Serv), sizeof(struct sockaddr));
     s->sa_Serv.sin_family = PF_INET;
     s->sa_Serv.sin_addr.s_addr = htonl(INADDR_ANY);
     s->sa_Serv.sin_port = htons(UDP_port_dest);
     bind(s->udp_socket, (struct sockaddr *) &(s->sa_Serv), sizeof(struct sockaddr));
-    //perror("Bind !\n");
 
     s->taille_sa = sizeof(struct sockaddr);
 
@@ -44,22 +42,19 @@ Serveur* initServ(int UDP_port_dest)
 
 /*
     * Attend la réception d'un paquet
-    * @param s : pointeur sur le serveur
-    * @param buf : pointeur sur le paquet
+    * @param s pointeur sur le serveur
+    * @param buf pointeur sur le paquet
 */
 int receipt(Serveur* s, packet* buf){
     char buffer[BUF_SIZE];
     recvfrom(s->udp_socket, buffer, BUF_SIZE, 0, NULL, NULL);
-    //printf("\n\nMessage reçu\nBuffer : %s\n", buffer);
 
-    //printf("!==Paquet reçu==!\n");
     char temp[5];
     strncpy(temp, buffer, 4);
     temp[5] = '\0';
     int taille_ip_emetteur = (atoi(temp));
     memset(buf->adress_emetteur, 0, strlen(buf->adress_emetteur));
     memcpy(buf->adress_emetteur, buffer+4, taille_ip_emetteur);
-    //printf("IP emetteur : %s\n", buf->adress_emetteur);
 
     strncpy(temp, buffer+4+taille_ip_emetteur, 4);
     temp[5] = '\0';
@@ -68,7 +63,6 @@ int receipt(Serveur* s, packet* buf){
 
     memset(buf->adress_destinataire, 0, strlen(buf->adress_destinataire));
     memcpy(buf->adress_destinataire, buffer+4+taille_ip_emetteur+4, taille_ip_dest);
-    //printf("IP destinataire : %s\n", buf->adress_destinataire);
     
     strncpy(temp, buffer+4+taille_ip_emetteur+4+taille_ip_dest, 4);
     temp[5] = '\0';
@@ -77,36 +71,31 @@ int receipt(Serveur* s, packet* buf){
 
     memset(buf->data, 0, strlen(buf->data));
     memcpy(buf->data, buffer+4+taille_ip_emetteur+4+taille_ip_dest+4, taille_data);
-    //printf("Data : %s\n", buf->data);
+
     buf->size = 0;
     memcpy(&(buf->size), &taille_data, sizeof(int));
-    //printf("Taille data : %d\n", buf->size);
+
 
     strncpy(temp, buffer+4+taille_ip_emetteur+4+taille_ip_dest+4+taille_data, 4);
     temp[5] = '\0';
 
     buf->checksum = 0;
     memcpy(&(buf->checksum), temp, 4);
-    //printf("Checksum : %d\n", buf->checksum);
-
-    //printf("!==Fin paquet==!\n");
 
     return EXIT_SUCCESS;
-    //perror("Recvfrom !\n");
 }
 
 /*
     * Ferme le serveur
-    * @param s : pointeur sur le serveur
+    * @param s pointeur sur le serveur
 */
 void closeServ(Serveur* s){
     close(s->udp_socket);
-    //perror("Close !\n");
 }
 
 /*
     * Libère la mémoire du serveur
-    * @param s : pointeur sur le serveur
+    * @param s pointeur sur le serveur
 */
 void deleteServ(Serveur* s){
     free(s);

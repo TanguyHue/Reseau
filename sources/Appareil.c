@@ -15,9 +15,9 @@ struct Appareil{
 
 /*
     * Fonction qui initialise un appareil
-    * @param parametre[] : tableau de chaîne de caractère contenant l'emplacement de l'appareil dans l'anneau et le port UDP. Mettre l pour être en local
-    * @param nb_parametre : nombre d'éléments dans le tableau parametre[]
-    * @return Appareil* : pointeur sur l'appareil initialisé
+    * @param parametre[] tableau de chaîne de caractère contenant l'emplacement de l'appareil dans l'anneau et le port UDP. Mettre l pour être en local
+    * @param nb_parametre nombre d'éléments dans le tableau parametre[]
+    * @return Appareil* pointeur sur l'appareil initialisé
 */
 Appareil* initAppareil(char* parametre[], int nb_parametre){    
     if(nb_parametre < 2 || nb_parametre > 3){
@@ -75,10 +75,10 @@ Appareil* initAppareil(char* parametre[], int nb_parametre){
 
 /*
     * Fonction qui initialise un appareil
-    * @param nom : nom de l'appareil
-    * @param ip : adresse IP de l'appareil
-    * @param ip_suivante : adresse IP de l'appareil suivant dans l'anneau
-    * @return Appareil* : pointeur sur l'appareil initialisé
+    * @param nom nom de l'appareil
+    * @param ip adresse IP de l'appareil
+    * @param ip_suivante adresse IP de l'appareil suivant dans l'anneau
+    * @return Appareil* pointeur sur l'appareil initialisé
 */
 Appareil *initAppareilParam(char* nom, char *ip, char *ip_suivante, int port)
 {
@@ -96,8 +96,8 @@ Appareil *initAppareilParam(char* nom, char *ip, char *ip_suivante, int port)
 }
 /*
  * Fonction qui retourne le nom de l'appareil
- * @param a : pointeur sur l'appareil
- * @return char* : nom de l'appareil
+ * @param a pointeur sur l'appareil
+ * @return char* nom de l'appareil
  */
 char *getNom(Appareil *a)
 {
@@ -106,8 +106,8 @@ char *getNom(Appareil *a)
 
 /*
     * Fonction qui retourne l'adresse IP de l'appareil
-    * @param a : pointeur sur l'appareil
-    * @return char* : adresse IP de l'appareil
+    * @param a pointeur sur l'appareil
+    * @return char* adresse IP de l'appareil
 */
 char *getIP(Appareil *a)
 {
@@ -116,8 +116,8 @@ char *getIP(Appareil *a)
 
 /*
     * Fonction qui retourne l'adresse IP de l'appareil suivant dans l'anneau
-    * @param a : pointeur sur l'appareil
-    * @return char* : adresse IP de l'appareil suivant
+    * @param a pointeur sur l'appareil
+    * @return char* adresse IP de l'appareil suivant
 */
 char *getIPSuivant(Appareil *a)
 {
@@ -126,8 +126,8 @@ char *getIPSuivant(Appareil *a)
 
 /*
     * Fonction qui retourne le port UDP de l'appareil
-    * @param a : pointeur sur l'appareil
-    * @return int : port UDP de l'appareil
+    * @param a pointeur sur l'appareil
+    * @return int port UDP de l'appareil
 */
 int getUDPport(Appareil *a)
 {
@@ -136,7 +136,7 @@ int getUDPport(Appareil *a)
 
 /*
     * Fonction qui libère la mémoire allouée pour l'appareil
-    * @param a : pointeur sur l'appareil
+    * @param a pointeur sur l'appareil
 */
 void deleteAppareil(Appareil *a)
 {

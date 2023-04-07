@@ -67,7 +67,6 @@ int main(int argc, char* argv[])
     while(1){
         receipt(serveur, p);
         usleep(20000);
-        //while (attente);
         
         if(checkToken(p)){
             if(reset != 0){
@@ -81,9 +80,7 @@ int main(int argc, char* argv[])
             }
             else{
                 nb_token = 1;
-                //printf("Nb token : 1\n");
                 usleep(20000);
-                //printf("Envoi du token\n");
                 sendData(p, machine);
             }
         }
@@ -92,7 +89,7 @@ int main(int argc, char* argv[])
                 kill(pid_fils, SIGKILL);
                 printf("\n\n/!\\ Message reçu /!\\ \n");
                 if(checksum(p) == 0){
-                    printf("Le message est incorrect !!!!!!!!!!!\n");
+                    printf("Le message est incorrect !\n");
                 }
                 else{
                     printf("Message reçu de : %s\n", getAdressEmetteur(p));
@@ -102,7 +99,6 @@ int main(int argc, char* argv[])
                 packet* token = tokenPacket();
                 sendData(token, machine);
                 nb_token = 1;
-                //printf("Nb token : 1\n");
                 sleep(2);
                 deletePacket(token);
             }
@@ -110,16 +106,13 @@ int main(int argc, char* argv[])
                 if(checkReset(p, machine)){
                     if(checkReset(p, machine) == 1){
                         reset = 2;
-                        //printf("Reset : 2\n");
                         nb_token = 0;
-                        //printf("Nb token : 0\n");
                     }
                     sendData(p, machine);
                     usleep(20000);
                 }
             }
         }
-        //while (attente);
         
     }
 
@@ -132,7 +125,9 @@ int main(int argc, char* argv[])
 
     return EXIT_SUCCESS;
 }
-
+/*
+    Fonction de création de procesus
+*/
 void createProcess(){
 
     if(pipe(fd) == -1){
@@ -242,7 +237,6 @@ void message(){
         printf("Token reçu !\n");
         sendData(data, machine);
         nb_token = 0;
-        //printf("Nb token : 0\n");
         n = 0;
     }
     kill(pid_fils, SIGKILL);
@@ -251,11 +245,9 @@ void message(){
     if(nb_token){
         packet* token = tokenPacket();
         sendData(token, machine);
-        //printf("Reset : 0\n");
         deletePacket(token);
     }
 
     deletePacket(data);
-    //usleep(200);
     createProcess();
 }
