@@ -25,8 +25,13 @@ make
 Pour lancer le programme, il faut lancer la commande suivante :
 
 ```bash
-./main [appareil] [port(optionel)]
+./main [appareil] [option]
 ```
+Dans les options on retrouve : 
+* `-r` : Utilisation du réseau externe
+* `-l` : Utilisation du réseau local
+
+Si on ne met pas d'option, on utilise automatiquement le réseau local. 
 
 ### Local
 
@@ -43,16 +48,24 @@ Liste des appareils possibles :
 
 On peut changer les adresses IP dans le fichier **main.c**, en changeant les valeurs de la constante **IP_1**, **IP_2**, **IP_3** et **IP_4**.  
 
+On peut aussi changer les ports dans le fichier **main.c**, en changeant les valeurs de port dans les paramètres des fonctions **initAppareilParam** et **initServ** en faisant attention de bien respecter la boucle de l'anneau : 
+
+Machine 1 --> Machine 2 --> Machine 3 --> Machine 4 --> Machine 1
+
 
 ### Réseau externe
 
-Liste des appareils possibles :
-* `1` Appareil 1 : @IP = 172.19.70.26
-* `2` Appareil 2 : @IP = 172.19.70.27
-* `3` Appareil 3 : @IP = 172.19.70.28
-* `l` localhost : @IP = 127.0.0.1
+Si on choisit d'utiliser le réseau externe, il faut alors préciser les différentes IP des machines de l'anneau. 
+Le programme nous demandera alors de rentrer trois adresses IP, en plus de celle de la machine.
 
-On peut changer les adresses IP dans le fichier **Appareil.c**, en changeant les valeurs de la constante **IP_1**, **IP_2** et **IP_3**.
+On doit aussi préciser à chaque fois quelle machine on lance pour que l'anneau soit complet.
+
+*Exemple :* si on veut lancer la machine 1 en utiilisant le réseau externe : 
+```
+./main 1 -r
+```
+
+
 Le port est optionnel, il est par défaut à 8000.  
 
 
