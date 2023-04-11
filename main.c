@@ -9,10 +9,10 @@
 #include <string.h>
 
 // Ports d'écoute des différents appareils
-#define UDP_1 8001
-#define UDP_2 8002
-#define UDP_3 8003
-#define UDP_4 8004
+#define UDP_1 8011
+#define UDP_2 8012
+#define UDP_3 8013
+#define UDP_4 8014
 
 // Adresses IP des appareils
 char IP_1[128] = "127.0.0.1\0";
