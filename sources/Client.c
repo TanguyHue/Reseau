@@ -38,7 +38,7 @@ int nb_token = 0;
 void createProcess();
 // Analyse de la saisie de l'utilisateur et l'envoi du paquet
 void message();
-
+// Fonction qui remplit les octets d'un entier pour qu'il fasse 4 caractères
 char* completeInt(int n);
 
 /*
@@ -247,7 +247,6 @@ void message(){
     if(nb_token == 0 && n) { printf("Attention, il n'y a pas de token de boucle\n"); }
     if(n) { nb_token = -1; }
     
-    // Changer, mettre plutot une valeur à une variable et cest le while principal qui va envoyer le message
     if(n){
         printf("En attente de token...\n");
         receipt(serveur, p);
