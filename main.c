@@ -9,23 +9,16 @@
 #include <string.h>
 
 // Ports d'écoute des différents appareils
-#define UDP_1 8011
-#define UDP_2 8012
-#define UDP_3 8013
-#define UDP_4 8014
+#define PORT_1 8011
+#define PORT_2 8012
+#define PORT_3 8013
+#define PORT_4 8014
 
 // Adresses IP des appareils
 char IP_1[128] = "127.0.0.1\0";
 char IP_2[128] = "127.0.0.2\0";
 char IP_3[128] = "127.0.0.3\0";
 char IP_4[128] = "127.0.0.4\0";
-
-
-
-// 172.19.65.111 <- 1
-// 172.19.65.112 <- 2
-// 172.19.65.114 <- 3
-// 172.19.65.115 <- 4
 
 // Saisie des IP des machines, pour les réseaux externes
 void lire_IP();
@@ -41,20 +34,20 @@ int main(int argc, char* argv[])
 
             lire_IP();
             if(strcmp(argv[1], "1") == 0){
-                machine = initAppareil("machine 1\0", IP_1, IP_2, UDP_2);
-                serveur = initServ(UDP_1);
+                machine = initAppareil("machine 1\0", IP_1, IP_2, PORT_2);
+                serveur = initServ(PORT_1);
             }
             else if(strcmp(argv[1], "2") == 0){
-                machine = initAppareil("machine 2\0", IP_1, IP_2, UDP_3);
-                serveur = initServ(UDP_2);
+                machine = initAppareil("machine 2\0", IP_1, IP_2, PORT_3);
+                serveur = initServ(PORT_2);
             }
             else if(strcmp(argv[1], "3") == 0){
-                machine = initAppareil("machine 3\0", IP_1, IP_2, UDP_4);
-                serveur = initServ(UDP_3);
+                machine = initAppareil("machine 3\0", IP_1, IP_2, PORT_4);
+                serveur = initServ(PORT_3);
             }
             else if(strcmp(argv[1], "4") == 0){
-                machine = initAppareil("machine 4\0", IP_1, IP_2, UDP_1);
-                serveur = initServ(UDP_4);
+                machine = initAppareil("machine 4\0", IP_1, IP_2, PORT_1);
+                serveur = initServ(PORT_4);
             }
             else {
                 perror("Erreur : Argument IP invalide\n");
@@ -66,20 +59,20 @@ int main(int argc, char* argv[])
             printf("Boucle locale\n");
 
             if(strcmp(argv[1], "1") == 0){
-                machine = initAppareil("machine 1\0", IP_1, IP_2, UDP_2);
-                serveur = initServ(UDP_1);
+                machine = initAppareil("machine 1\0", IP_1, IP_2, PORT_2);
+                serveur = initServ(PORT_1);
             }
             else if(strcmp(argv[1], "2") == 0){
-                machine = initAppareil("machine 2\0", IP_2, IP_3, UDP_3);
-                serveur = initServ(UDP_2);
+                machine = initAppareil("machine 2\0", IP_2, IP_3, PORT_3);
+                serveur = initServ(PORT_2);
             }
             else if(strcmp(argv[1], "3") == 0){
-                machine = initAppareil("machine 3\0", IP_3, IP_4, UDP_4);
-                serveur = initServ(UDP_3);
+                machine = initAppareil("machine 3\0", IP_3, IP_4, PORT_4);
+                serveur = initServ(PORT_3);
             }
             else if(strcmp(argv[1], "4") == 0){
-                machine = initAppareil("machine 4\0", IP_4, IP_1, UDP_1);
-                serveur = initServ(UDP_4);
+                machine = initAppareil("machine 4\0", IP_4, IP_1, PORT_1);
+                serveur = initServ(PORT_4);
             }
             else {
                 perror("Erreur : Argument IP invalide");
@@ -105,20 +98,20 @@ int main(int argc, char* argv[])
     else{
         printf("Boucle local\n");
         if(strcmp(argv[1], "1") == 0){
-            machine = initAppareil("machine 1\0", IP_1, IP_2, UDP_2);
-            serveur = initServ(UDP_1);
+            machine = initAppareil("machine 1\0", IP_1, IP_2, PORT_2);
+            serveur = initServ(PORT_1);
         }
         else if(strcmp(argv[1], "2") == 0){
-            machine = initAppareil("machine 2\0", IP_2, IP_3, UDP_3);
-            serveur = initServ(UDP_2);
+            machine = initAppareil("machine 2\0", IP_2, IP_3, PORT_3);
+            serveur = initServ(PORT_2);
         }
         else if(strcmp(argv[1], "3") == 0){
-            machine = initAppareil("machine 3\0", IP_3, IP_4, UDP_4);
-            serveur = initServ(UDP_3);
+            machine = initAppareil("machine 3\0", IP_3, IP_4, PORT_4);
+            serveur = initServ(PORT_3);
         }
         else if(strcmp(argv[1], "4") == 0){
-            machine = initAppareil("machine 4\0", IP_4, IP_1, UDP_1);
-            serveur = initServ(UDP_4);
+            machine = initAppareil("machine 4\0", IP_4, IP_1, PORT_1);
+            serveur = initServ(PORT_4);
         }
         else {
             perror("Erreur : Argument IP invalide");
