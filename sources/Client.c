@@ -25,6 +25,8 @@ char IP4[128];
 int fd[2];
 // Buffer du pipe
 char buffer[1048];
+// Enregistrement de la saisie de l'utilisateur
+packet* lastSend;
 // Processus fils créé
 pid_t pid_fils;
 Appareil* machine;
@@ -118,6 +120,7 @@ int startSession(Appareil* a, Serveur* s, char* IP[]){
     serveur = s;
 
     p = createPacket("default", machine);
+    lastSend = createPacket("default", machine);
 
     createProcess();
 
@@ -126,27 +129,39 @@ int startSession(Appareil* a, Serveur* s, char* IP[]){
         usleep(DELAI);
         
         if(checkToken(p)){
-                nb_token = 1;
-                usleep(DELAI);
-                sendData(p, machine);
+            nb_token = 1;
+            usleep(DELAI);
+            sendData(p, machine);
         }
         else{
             if(checkIP(machine, p)){
                 kill(pid_fils, SIGKILL);
                 printf("\n\n/!\\ Message reçu /!\\ \n");
-                if(checksum(p) == 0){
+                // Erreur de checksum
+                if(checkErrorChecksum(p)){
                     printf("Le message est incorrect !\n");
+                    setErrorPacket(p);
+                    sendData(p, machine);
+                // Le dernier message envoyé par cette machine a eu un problème
+                } else if(checkErrorPacket(p)) {
+                    printf("Le dernier message a eu un problème. Il est renvoyé\n");                    
+                    sendData(lastSend, machine);
+                    packet* token = tokenPacket();
+                    sendData(token, machine);
+                    nb_token = 1;
+                    deletePacket(token);
                 }
+                // Le message est correct
                 else{
                     printf("Message reçu de : %s\n", getAdressEmetteur(p));
                     printf("Le message est : %s\n", getData(p));
+                    packet* token = tokenPacket();
+                    sendData(token, machine);
+                    nb_token = 1;
+                    deletePacket(token);
                 }
                 createProcess();
-                packet* token = tokenPacket();
-                sendData(token, machine);
-                nb_token = 1;
                 sleep(2);
-                deletePacket(token);
             }
             else{
                 sendData(p, machine);
@@ -158,6 +173,7 @@ int startSession(Appareil* a, Serveur* s, char* IP[]){
 
 
     deletePacket(p);
+    deletePacket(lastSend);
     return EXIT_SUCCESS;
 }
 
@@ -252,6 +268,8 @@ void message(){
         receipt(serveur, p);
         printf("Token reçu !\n");
         sendData(data, machine);
+        // On sauvegarde le dernier paquet envoyé
+        cpyPacket(lastSend, p);
         nb_token = 0;
         n = 0;
     }
@@ -265,5 +283,6 @@ void message(){
     }
 
     deletePacket(data);
+    printf("Message envoyé !\n");
     createProcess();
 }
