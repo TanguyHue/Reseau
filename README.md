@@ -9,6 +9,7 @@ Pour compiler le projet, il faut cloner le dépôt git et lancer le script d'ins
 ```bash
 git clone https://github.com/TanguyHue/Reseau.git
 cd Reseau
+git checkout Rendu-TP
 make
 ```
 
