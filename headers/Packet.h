@@ -14,8 +14,6 @@ struct packet {
 
 packet* createPacket(char* data, Appareil* a);
 packet* tokenPacket();
-packet* resetPacket(Appareil* a);
-int isTokenPacket(packet* p);
 int getSize(packet* p);
 char* getData(packet* p);
 void setData(packet* p, char* data);
@@ -24,10 +22,12 @@ void setAdressEmetteur(packet* p, char* adress_emetteur);
 char* getAdressDest(packet* p);
 char* getAdressEmetteur(packet* p);
 int sum(char* data, int len);
-int checksum (packet* p);
 void deletePacket(packet* p);
 int checkIP(Appareil* a, packet* p);
 int checkToken(packet* p);
-int checkReset(packet* p, Appareil* a);
+int checkErrorChecksum(packet* p);
+void setErrorPacket(packet* p);
+int checkErrorPacket(packet* p);
+void cpyPacket(packet* p1, packet* p2);
 
 #endif

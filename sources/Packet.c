@@ -39,29 +39,12 @@ int sum(char* data, int len) {
 }
 
 /*
-    * Fais un test de checksum
-    * @param p paquet
-    * @return int : 1 si le checksum est bon, 0 sinon
-*/
-int checksum (packet* p) {
-    if (sum(p->data, p->size) == p->checksum) {
-        return EXIT_SUCCESS;
-    }
-    return EXIT_FAILURE;
-}
-
-/*
     * Initialise un paquet token
     * @return packet* : paquet token initialisé
 */
 packet* tokenPacket() {
-    Appareil* a = initAppareil("NULL", "1111111", "1111111", 1111111);
+    Appareil* a = initAppareil("NULL", "-1", "-1", -1);
     return createPacket("", a);
-}
-
-packet* resetPacket(Appareil* a){
-    Appareil* a2 = initAppareil("NULL", getIP(a), "000000", 1111111);
-    return createPacket("", a2);
 }
 
 /*
@@ -69,7 +52,7 @@ packet* resetPacket(Appareil* a){
     * @param p paquet
     * @return int : 1 si le paquet est un paquet token, 0 sinon
 */
-int isTokenPacket(packet* p) {
+int checkToken(packet* p) {
     return p->size == 0;
 }
 
@@ -156,28 +139,42 @@ int checkIP(Appareil* a, packet* p){
     return(strcmp(getIP(a), getAdressDest(p)) == 0);
 }
 
-
 /*
-    * Vérifie si le packet est un token
+    * Vérifie si le checksum du paquet est bon
     * @param p paquet
-    * @return int : 1 si le paquet est un token, 0 sinon
+    * @return int : 1 si le checksum du paquet est bon, 0 sinon
 */
-int checkToken(packet* p){
-    return(strcmp(getAdressEmetteur(p), "1111111") == 0);
+int checkErrorChecksum(packet* p){
+    return (p->checksum == sum(p->data, p->size));
 }
 
 /*
-    * Gère les tokens de réinitialisation
+    * Modifie le paquet pour qu'il soit considéré comme un paquet d'erreur
     * @param p paquet
-    * @param a Appareil qui reçoit
-    * @return int : 0 si le paquet à fait un tour, 1 si ce paquet est un paquet de reset, 2 sinon
 */
-int checkReset(packet* p, Appareil* a){
-    if(strcmp(getAdressDest(p), "000000") == 0 && strcmp(getAdressEmetteur(p), getIP(a)) == 0){
-        return 0;
-    } else if(strcmp(getAdressDest(p), "000000") == 0 && strcmp(getAdressEmetteur(p), getIP(a)) != 0){
-        return 1;
-    } else {
-        return 2;
-    }
+void setErrorPacket(packet* p){
+    setAdressDest(p, getAdressEmetteur(p));
+    setAdressEmetteur(p, "0000000");
+}
+
+/*
+    * Vérifie si le paquet est un paquet d'erreur
+    * @param p paquet
+    * @return int : 1 si le paquet est un paquet d'erreur, 0 sinon
+*/
+int checkErrorPacket(packet* p){
+    return (strcmp(getAdressEmetteur(p),"0000000") == 0);
+}
+
+/*
+    * Copie un paquet dans un autre
+    * @param p1 destination
+    * @param p2 source
+*/
+void cpyPacket(packet* p1, packet* p2){
+    p1->size = p2->size;
+    p1->checksum = p2->checksum;
+    strcpy(p1->adress_emetteur, p2->adress_emetteur);
+    strcpy(p1->adress_destinataire, p2->adress_destinataire);
+    strcpy(p1->data, p2->data);
 }
