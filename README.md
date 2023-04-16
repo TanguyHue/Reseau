@@ -59,14 +59,12 @@ On peut changer les adresses IP dans le fichier **main.c**, en changeant les val
 
 ### Réseau externe
 
-Liste des appareils possibles :
-* `1` Appareil 1 : @IP = 172.19.70.26
-* `2` Appareil 2 : @IP = 172.19.70.27
-* `3` Appareil 3 : @IP = 172.19.70.28
-* `l` localhost : @IP = 127.0.0.1
+En mode **réseau externe**, le programme va demander à l'utilisateur l'adresse IP de sa machine, et l'adresse IP de la machine suivante dans l'anneau. Il demandera ensuite les deux dernières adresses IP de l'anneau, et les machines sont donc : 
 
-On peut changer les adresses IP dans le fichier **Appareil.c**, en changeant les valeurs des chaines de caractères **IP_1**, **IP_2** et **IP_3**. 
-
+* `1` Appareil 1 : La machine qui execute le programme
+* `2` Appareil 2 : la machine suivante dans l'anneau
+* `3` Appareil 3 : @IP_3
+* `4` Appareil 4 : @IP_4
 
 ## Organisation du projet
 
