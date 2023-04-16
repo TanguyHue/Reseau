@@ -2,14 +2,6 @@
 
 L'objectif de ce TP est de mettre en place un réseau local en C entre plusieurs machines. 
 
-## Auteurs
-
-Le projet a été réalisé par :
-* **Nicolas Godard**
-* **Emilien L'Haridon**
-* **Leo Bigardi**
-* **Tanguy Hue**
-
 ## Compilation
 
 Pour compiler le projet, il faut cloner le dépôt git et lancer le script d'installation.
@@ -65,84 +57,3 @@ En mode **réseau externe**, le programme va demander à l'utilisateur l'adresse
 * `2` Appareil 2 : la machine suivante dans l'anneau
 * `3` Appareil 3 : @IP_3
 * `4` Appareil 4 : @IP_4
-
-## Organisation du projet
-
-Le projet est composé de 2 dossiers :
-* **sources/** : contient les fichiers sources du projet
-* **headers/** : contient les fichiers headers du projet
-
-Ces dossiers sont composés de 4 fichiers : 
-* **Appareil.c** : contient le code source d'un appareil
-* **Client.c** : gère l'écoute et l'émission de paquets
-* **Serveur.c** : gère la réception de paquets
-* **Packet.c** : contient le code source des paquets
-
-### Appareil
-
-L'appareil est le point de départ du programme. Il permet de choisir l'appareil que l'on souhaite utiliser, ainsi que le port sur lequel on souhaite communiquer.
-
-Pour cela, on utilise une structure **Appareil** qui contient :
-* **nom** : le nom de l'appareil
-* **IP** : l'adresse IP de l'appareil
-* **IP_suivant** : l'adresse IP de l'appareil suivant dans l'anneau
-* **UDP_port** : le port UDP sur lequel on souhaite communiquer
-
-### Client
-
-Le client permet d'envoyer des paquets sur le port spécifié dans l'appareil, et gère l'écoute sur l'anneau. 
-L'envoi se fait à l'aide de la fonction `sendData` et l'écoute de l'anneau et de l'entrée standard se fait à l'aide de la fonction `startSession`.
-
-Pour cela, le client utilise 2 threads : le thread principal qui va créer un thread fils et va ensuite écouter sur le réseau, et le thread fils qui va attendre un message de l'utilisateur et s'il reçoit un message, il va envoyer un paquet sur le réseau.
-
-Pour l'envoi du message, le client va convertir le paquet à envoyer sous forme d'une chaines de caractères, et ensuite il va envoyer le message sur le réseau.
-
-Lorsqu'un message est reçu, le processus principal va vérifier : 
-* Si le message est un token ou un message. Si c'est un token, il va regarder si un reset a été demandé par une machine, dans ce cas il va mettre son nombre de token a 0 et envoyé le token à la machine d'après
-* Sinon, il va regarder si le message est pour lui, si c'est le cas, il va tuer son processus fils et afficher le message. 
-* Sinon, il va regarder si c'est un reset. Si c'est le cas, il va mettre son nombre de token à 0 et changer la variable reset et envoyé le token à la machine d'après.
-* Sinon il va renvoyé le paquet à la machine d'après.
-
-
-### Serveur
-
-Le serveur permet de gérer la réception des paquets sur le port spécifié dans l'appareil.
-
-Pour cela, on utilise une structure **Serveur** qui contient :
-* **udp_socket** : le port sur lequel on souhaite écouter
-* **sa_Serv** : la structure sockaddr_in qui contient les informations sur le serveur
-* **sa_Client** : la structure sockaddr_in qui contient les informations sur le client
-* **taille_sa** : la taille de la structure sockaddr_in
-
-Lorsque le serveur reçoit un message, il va devoir le traiter en convertissant la chaine de caractère reçu sous forme de paquet.
-
-### Packet
-
-Le packet permet de créer des paquets qui seront envoyés sur le réseau.
-
-Pour cela, on utilise une structure **Packet** qui contient :
-* **size** : la taille des données
-* **adress_emetteur** : l'adresse IP de l'émetteur
-* **adress_destinataire** : l'adresse IP du destinataire
-* **data** : les données
-* **checksum** : le checksum du paquet
-
-La taille maximale d'un paquet est de 1024 octets. On peut changer cette taille en modifiant la constante **PACKET_SIZE** dans le fichier **Packet.c**.
-
-Enfin, grâce à la fonction **tokenPacket**, on peut créer un token qui sera envoyé sur le réseau. Ce token ne contient pas de données, mais uniquement l'adresse IP de l'émetteur et du destinataire.
-
-## Fonctionnement
-
-![fonctionnement du programme](img/fonctionnement.png)
-
-### Structure d'un paquet
-
-Lorsqu'un paquet est envoyé, il est écrit sous la forme suivante d'une chaine de caractères :
-
-```bash
-[SIZE_ADRESS_EMETTEUR][ADRESS_EMETTEUR][SIZE_ADRESS_DEST][ADRESS_DEST][SIZE_DATA][DATA][CHECKSUM]
-```
-
-Tous les entiers sont écrits sur 4 bits, et les bits non utilisés sont remplis par des `0`.
-
-Les paquets de type **token** : ils ont comme adresse de destination "-1"  et du destinataire "-1", et comme port -1. Ils sont utilisés pour savoir quel appareil peut envoyer un message. Ils sont déterminer à l'aide de la fonction `checkErrorCheckSum` de la bibliothèque **Packet.h**. Pour cela, on vérifie si la taille du paquet est à 0 ou non.
