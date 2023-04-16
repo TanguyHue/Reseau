@@ -147,4 +147,4 @@ Lorsqu'un paquet est envoyé, il est écrit sous la forme suivante d'une chaine 
 
 Tous les entiers sont écrits sur 4 bits, et les bits non utilisés sont remplis par des `0`.
 
-Les paquets de type **token** : ils ont comme adresse de destination l'adresse IP de l'émetteur  et du destinataire "1111111", et comme port 1111111. Ils sont utilisés pour savoir quel appareil doit envoyer un message.
+Les paquets de type **token** : ils ont comme adresse de destination "-1"  et du destinataire "-1", et comme port -1. Ils sont utilisés pour savoir quel appareil peut envoyer un message. Ils sont déterminer à l'aide de la fonction `checkErrorCheckSum` de la bibliothèque **Packet.h**. Pour cela, on vérifie si la taille du paquet est à 0 ou non.
