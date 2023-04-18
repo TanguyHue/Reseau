@@ -93,7 +93,9 @@ Pour cela, on utilise une structure **Appareil** qui contient :
 Le client permet d'envoyer des paquets sur le port spécifié dans l'appareil, et gère l'écoute sur l'anneau. 
 L'envoi se fait à l'aide de la fonction `sendData` et l'écoute de l'anneau et de l'entrée standard se fait à l'aide de la fonction `startSession`.
 
-Pour cela, le client utilise 2 threads : le thread principal qui va créer un thread fils et va ensuite écouter sur le réseau, et le thread fils qui va attendre un message de l'utilisateur et s'il reçoit un message, il va envoyer un paquet sur le réseau.
+Pour cela, le client utilise 2 threads :
+* Le thread principal ou "père" va créer le processus fils à l'aide d'un `fork`, puis il va écouter sur le réseau à l'aide de la fonction `receipt` de `Serveur.h`.
+* Le thread fils va attendre que l'utilisateur rentre un message. Quand il reçoit un message, il envoie un signal **SIGUSR1** au processus père, qui va envoyer le message sur le réseau. Une fois que le message est envoyé, le processus fils va mourir, et va être recrée. Cela est fait pour gérer le buffer de sortie et améliorer l'affichage.
 
 Pour l'envoi du message, le client va convertir le paquet à envoyer sous forme d'une chaines de caractères, et ensuite il va envoyer le message sur le réseau.
 
