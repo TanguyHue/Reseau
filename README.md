@@ -7,7 +7,7 @@ L'objectif de ce TP est de mettre en place un réseau local en C entre plusieurs
 Le projet a été réalisé par :
 * **Nicolas Godard**
 * **Emilien L'Haridon**
-* **Leo Bigardi**
+* **Leo Brigardis**
 * **Tanguy Hue**
 
 ## Compilation
